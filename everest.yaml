@@ -1,0 +1,6 @@
+- Name: FactoryHelper
+  Version: 1.3.2
+  DLL: Code/bin/FactoryHelper.dll
+  Dependencies:
+    - Name: Everest
+      Version: 1.2138.0
