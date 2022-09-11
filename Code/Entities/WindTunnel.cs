@@ -91,7 +91,7 @@ namespace FactoryHelper.Entities {
             }
         }
 
-        private enum Direction {
+        public enum Direction {
             Up,
             Down,
             Left,

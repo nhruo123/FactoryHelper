@@ -86,7 +86,7 @@ namespace FactoryHelper.ScreenWipes {
             }
         }
 
-        private struct Gear {
+        public struct Gear {
             public const int ToothCount = 8;
             private const float _turnSpeed = 12f;
 

@@ -54,7 +54,7 @@ namespace FactoryHelper.Entities {
             Depth = 8999;
         }
 
-        private enum Direction {
+        public enum Direction {
             Up,
             Down,
             Left,
