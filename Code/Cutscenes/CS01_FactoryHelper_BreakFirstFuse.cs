@@ -58,7 +58,7 @@ namespace FactoryHelper.Cutscenes {
         }
 
         public override void OnEnd(Level level) {
-            _player.StateMachine.State = Player.StNormmal;
+            _player.StateMachine.State = Player.StNormal;
             _player.DummyAutoAnimate = true;
             _player.Speed = Vector2.Zero;
             _player.Facing = Facings.Left;
