@@ -5,7 +5,7 @@ using Monocle;
 using System.Collections;
 
 namespace FactoryHelper.Cutscenes {
-    class CS01_FactoryHelper_MachineHeart : CutsceneEntity {
+    internal class CS01_FactoryHelper_MachineHeart : CutsceneEntity {
         private readonly Player _player;
         private readonly MachineHeart _machineHeart;
 
@@ -21,7 +21,7 @@ namespace FactoryHelper.Cutscenes {
         private IEnumerator Cutscene(Level level) {
             _player.StateMachine.State = 11;
             yield return 0.5f;
-            Vector2 panTo = (_machineHeart.Position - _player.Position) / 2 + _player.Position + Vector2.UnitY * 10;
+            Vector2 panTo = ((_machineHeart.Position - _player.Position) / 2) + _player.Position + (Vector2.UnitY * 10);
             yield return ZoomAndPan(panTo, 2f, 0.7f, true);
             yield return 0.5f;
             yield return Textbox.Say("KaydenFox_FactoryMod_1_Factory_A_MachineHeart");
@@ -36,10 +36,11 @@ namespace FactoryHelper.Cutscenes {
             if (centered) {
                 panTo -= 1 / zoomTo * new Vector2(320, 180) / 2;
             }
+
             float zoomFrom = Level.Camera.Zoom;
             for (float p = 0f; p < 1f; p += Engine.DeltaTime * speed) {
-                Level.Camera.Position = panFrom + (panTo - panFrom) * Ease.CubeInOut(p);
-                Level.Camera.Zoom = zoomFrom + (zoomTo - zoomFrom) * Ease.CubeInOut(p);
+                Level.Camera.Position = panFrom + ((panTo - panFrom) * Ease.CubeInOut(p));
+                Level.Camera.Zoom = zoomFrom + ((zoomTo - zoomFrom) * Ease.CubeInOut(p));
                 yield return null;
             }
         }

@@ -11,12 +11,7 @@ using System.Collections.Generic;
 namespace FactoryHelper.Entities {
     [CustomEntity("FactoryHelper/DashFuseBox")]
     public class DashFuseBox : Solid {
-        public enum Direction {
-            Left,
-            Right
-        }
-
-        private ParticleType _sparks = new ParticleType {
+        private readonly ParticleType _sparks = new() {
             Size = 1f,
             Color = Calc.HexToColor("d97b00"),
             Color2 = Calc.HexToColor("f7be00"),
@@ -25,31 +20,21 @@ namespace FactoryHelper.Entities {
             SpeedMin = 5f,
             SpeedMax = 30f,
             Acceleration = Vector2.UnitY * 60f,
-            DirectionRange = (float) Math.PI / 2f,
+            DirectionRange = (float)Math.PI / 2f,
             Direction = 0f,
             LifeMin = 0.5f,
             LifeMax = 1.0f
         };
-
-        private bool _persistent;
-        private bool _activatedPermanently {
-            get {
-                return (Scene as Level).Session.GetFlag($"DashFuseBox:{_id.Key}");
-            }
-            set {
-                (Scene as Level).Session.SetFlag($"DashFuseBox:{_id.Key}", value);
-            }
-        }
+        private readonly bool _persistent;
+        private readonly Sprite _mainSprite;
+        private readonly Sprite _doorSprite;
+        private readonly Entity _door;
+        private readonly Direction _direction;
+        private readonly HashSet<string> _activationIds = new();
+        private readonly bool _startCutscene;
         private bool _activated = false;
-
-        private Sprite _mainSprite;
-        private Sprite _doorSprite;
-        private Entity _door;
-        private Direction _direction;
         private EntityID _id;
-        private HashSet<string> _activationIds = new HashSet<string>();
         private Vector2 _pressDirection;
-        private bool _startCutscene;
 
         public DashFuseBox(EntityData data, Vector2 offset) : base(data.Position + offset, 4f, 16f, false) {
             string[] activationIds = data.Attr("activationIds", "").Split(',');
@@ -76,7 +61,6 @@ namespace FactoryHelper.Entities {
             _doorSprite.Active = false;
             _doorSprite.Visible = false;
 
-
             if (_direction == Direction.Left) {
                 _mainSprite.Scale *= new Vector2(-1f, 1f);
                 //_mainSprite.Position.X += 4;
@@ -85,7 +69,7 @@ namespace FactoryHelper.Entities {
 
                 Collider.Position.X -= 4;
                 _pressDirection = Vector2.UnitX;
-                _sparks.Direction = (float) Math.PI;
+                _sparks.Direction = (float)Math.PI;
             } else {
                 _pressDirection = -Vector2.UnitX;
             }
@@ -95,7 +79,18 @@ namespace FactoryHelper.Entities {
                     _activationIds.Add(activationId);
                 }
             }
+
             OnDashCollide = OnDashed;
+        }
+
+        public enum Direction {
+            Left,
+            Right
+        }
+
+        private bool _activatedPermanently {
+            get => (Scene as Level).Session.GetFlag($"DashFuseBox:{_id.Key}");
+            set => (Scene as Level).Session.SetFlag($"DashFuseBox:{_id.Key}", value);
         }
 
         public override void Added(Scene scene) {
@@ -122,6 +117,7 @@ namespace FactoryHelper.Entities {
                     return false;
                 }
             }
+
             return true;
         }
 
@@ -135,6 +131,7 @@ namespace FactoryHelper.Entities {
                 if (_startCutscene) {
                     Scene.Add(new CS01_FactoryHelper_BreakFirstFuse(player));
                 }
+
                 _activated = true;
 
                 _doorSprite.Active = true;
@@ -155,6 +152,7 @@ namespace FactoryHelper.Entities {
 
                 return DashCollisionResults.Rebound;
             }
+
             return DashCollisionResults.NormalCollision;
         }
 
@@ -172,6 +170,7 @@ namespace FactoryHelper.Entities {
             if (Scene == null) {
                 return;
             }
+
             SceneAs<Level>().ParticlesFG.Emit(_sparks, count, Position + Collider.CenterRight, new Vector2(0, Collider.Height / 4));
         }
 
@@ -180,6 +179,7 @@ namespace FactoryHelper.Entities {
                 foreach (string activationId in _activationIds) {
                     ActivatePermanently(activationId);
                 }
+
                 _activatedPermanently = true;
             }
         }
@@ -195,6 +195,7 @@ namespace FactoryHelper.Entities {
             if (!_activated) {
                 _mainSprite.DrawSimpleOutline();
             }
+
             base.Render();
         }
 

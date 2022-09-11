@@ -12,19 +12,12 @@ namespace FactoryHelper.Entities {
     public class PowerLine : Entity {
         public FactoryActivator Activator;
 
-        private enum Direction {
-            Up,
-            Down,
-            Left,
-            Right
-        }
-
-        private Node[] _cornerPoints;
-        private List<Image> _images = new List<Image>();
+        private readonly Node[] _cornerPoints;
+        private readonly List<Image> _images = new();
         private Color _defaultColor;
 
-        public PowerLine(EntityData entityData, Vector2 offset) :
-            this(entityData.Position,
+        public PowerLine(EntityData entityData, Vector2 offset)
+            : this(entityData.Position,
                  offset,
                  entityData.Nodes,
                  entityData.Attr("activationId", ""),
@@ -51,6 +44,7 @@ namespace FactoryHelper.Entities {
                 _cornerPoints[i - 1].Next = _cornerPoints[i];
                 _cornerPoints[i].Previous = _cornerPoints[i - 1];
             }
+
             NormalizeCornerPoints();
 
             foreach (Node node in _cornerPoints) {
@@ -58,6 +52,13 @@ namespace FactoryHelper.Entities {
             }
 
             Depth = 8999;
+        }
+
+        private enum Direction {
+            Up,
+            Down,
+            Left,
+            Right
         }
 
         public override void Awake(Scene scene) {
@@ -68,13 +69,13 @@ namespace FactoryHelper.Entities {
         }
 
         private void PowerUp() {
-            foreach (var sprite in _images) {
+            foreach (Image sprite in _images) {
                 sprite.Color = _defaultColor * 0.5f;
             }
         }
 
         private void PowerDown() {
-            foreach (var sprite in _images) {
+            foreach (Image sprite in _images) {
                 sprite.Color = _defaultColor * 0.1f;
             }
         }
@@ -91,32 +92,25 @@ namespace FactoryHelper.Entities {
                     Image lightImage = AddSpriteWithType(type, true);
                     lightImage.Position = node.Position;
                 }
+
                 if (node.Next != null) {
                     Vector2 step;
 
                     if (node.Next.X == node.X) {
                         type = "v";
-                        if (node.Y < node.Next.Y) {
-                            step = Vector2.UnitY * 8;
-                        } else {
-                            step = -Vector2.UnitY * 8;
-                        }
+                        step = node.Y < node.Next.Y ? Vector2.UnitY * 8 : -Vector2.UnitY * 8;
                     } else {
                         type = "h";
-                        if (node.X < node.Next.X) {
-                            step = Vector2.UnitX * 8;
-                        } else {
-                            step = -Vector2.UnitX * 8;
-                        }
+                        step = node.X < node.Next.X ? Vector2.UnitX * 8 : -Vector2.UnitX * 8;
                     }
 
-                    int stepCount = (int) (Math.Round(Math.Max(Math.Abs(node.Y - node.Next.Y), Math.Abs(node.X - node.Next.X))) / 8) - 1;
+                    int stepCount = (int)(Math.Round(Math.Max(Math.Abs(node.Y - node.Next.Y), Math.Abs(node.X - node.Next.X))) / 8) - 1;
 
                     for (int i = 0; i < stepCount; i++) {
                         Image baseImage = AddSpriteWithType(type);
-                        baseImage.Position = node.Position + step * (i + 1);
+                        baseImage.Position = node.Position + (step * (i + 1));
                         Image lightImage = AddSpriteWithType(type, true);
-                        lightImage.Position = node.Position + step * (i + 1);
+                        lightImage.Position = node.Position + (step * (i + 1));
                     }
 
                     node = node.Next;
@@ -127,10 +121,11 @@ namespace FactoryHelper.Entities {
         }
 
         private Image AddSpriteWithType(string type, bool isLight = false) {
-            Image image = new Image(GFX.Game[$"objects/FactoryHelper/powerLine/powerLine{(isLight ? "Light" : "")}_{type}"]);
+            Image image = new(GFX.Game[$"objects/FactoryHelper/powerLine/powerLine{(isLight ? "Light" : "")}_{type}"]);
             if (isLight) {
                 _images.Add(image);
             }
+
             Add(image);
             return image;
         }
@@ -154,7 +149,7 @@ namespace FactoryHelper.Entities {
 
         private void NormalizeCornerPoints() {
             for (int i = 1; i < _cornerPoints.Length; i++) {
-                var node = _cornerPoints[i];
+                Node node = _cornerPoints[i];
                 if (node.X != node.Previous.X && node.Y != node.Previous.Y) {
                     if (Math.Abs(node.X - node.Previous.X) < Math.Abs(node.Y - node.Previous.Y)) {
                         node.X = node.Previous.X;
@@ -167,11 +162,7 @@ namespace FactoryHelper.Entities {
 
         private string GetTypeString(Node node) {
             if (node.ExitDirections.Count == 1) {
-                if (node.ExitDirections.Contains(Direction.Down) || node.ExitDirections.Contains(Direction.Up)) {
-                    return "v";
-                } else {
-                    return "h";
-                }
+                return node.ExitDirections.Contains(Direction.Down) || node.ExitDirections.Contains(Direction.Up) ? "v" : "h";
             } else if (node.ExitDirections.Count == 2) {
                 if (node.ExitDirections.Contains(Direction.Left)) {
                     if (node.ExitDirections.Contains(Direction.Up)) {
@@ -206,55 +197,59 @@ namespace FactoryHelper.Entities {
         }
 
         private class Node {
+            public readonly HashSet<Direction> ExitDirections;
             public Vector2 Position;
             public Node Next;
             public Node Previous;
             public bool Rendered = true;
-            public readonly HashSet<Direction> ExitDirections;
-            public float X { get { return Position.X; } set { Position.X = value; } }
-            public float Y { get { return Position.Y; } set { Position.Y = value; } }
 
             public Node(Vector2 position) {
                 Position = position;
                 ExitDirections = new HashSet<Direction>();
             }
 
+            public float X { get => Position.X; set => Position.X = value; }
+            public float Y { get => Position.Y; set => Position.Y = value; }
+
             public void CheckNeighbors() {
                 if (HasLeftNeighbor()) {
                     ExitDirections.Add(Direction.Left);
                 }
+
                 if (HasRightNeighbor()) {
                     ExitDirections.Add(Direction.Right);
                 }
+
                 if (HasUpNeighbor()) {
                     ExitDirections.Add(Direction.Up);
                 }
+
                 if (HasDownNeighbor()) {
                     ExitDirections.Add(Direction.Down);
                 }
             }
 
             private bool HasLeftNeighbor() {
-                bool hasPrevious = (Previous != null && Previous.Position.X < Position.X);
-                bool hasNext = (Next != null && Next.Position.X < Position.X);
+                bool hasPrevious = Previous != null && Previous.Position.X < Position.X;
+                bool hasNext = Next != null && Next.Position.X < Position.X;
                 return hasPrevious || hasNext;
             }
 
             private bool HasRightNeighbor() {
-                bool hasPrevious = (Previous != null && Previous.Position.X > Position.X);
-                bool hasNext = (Next != null && Next.Position.X > Position.X);
+                bool hasPrevious = Previous != null && Previous.Position.X > Position.X;
+                bool hasNext = Next != null && Next.Position.X > Position.X;
                 return hasPrevious || hasNext;
             }
 
             private bool HasUpNeighbor() {
-                bool hasPrevious = (Previous != null && Previous.Position.Y < Position.Y);
-                bool hasNext = (Next != null && Next.Position.Y < Position.Y);
+                bool hasPrevious = Previous != null && Previous.Position.Y < Position.Y;
+                bool hasNext = Next != null && Next.Position.Y < Position.Y;
                 return hasPrevious || hasNext;
             }
 
             private bool HasDownNeighbor() {
-                bool hasPrevious = (Previous != null && Previous.Position.Y > Position.Y);
-                bool hasNext = (Next != null && Next.Position.Y > Position.Y);
+                bool hasPrevious = Previous != null && Previous.Position.Y > Position.Y;
+                bool hasNext = Next != null && Next.Position.Y > Position.Y;
                 return hasPrevious || hasNext;
             }
         }

@@ -4,20 +4,20 @@ using Monocle;
 using System;
 
 namespace FactoryHelper {
-    class FactoryHelperModule : EverestModule {
-        public static SpriteBank SpriteBank { get; private set; }
-
+    public class FactoryHelperModule : EverestModule {
         public static FactoryHelperModule Instance;
 
         public FactoryHelperModule() {
             Instance = this;
         }
 
+        public static SpriteBank SpriteBank { get; private set; }
+        public static FactoryHelperSession Session => (FactoryHelperSession)Instance._Session;
+        public static FactoryHelperSaveData SaveData => (FactoryHelperSaveData)Instance._SaveData;
+
         public override Type SettingsType => null;
         public override Type SaveDataType => typeof(FactoryHelperSaveData);
-        public static FactoryHelperSaveData SaveData => (FactoryHelperSaveData) Instance._SaveData;
         public override Type SessionType => typeof(FactoryHelperSession);
-        public static FactoryHelperSession Session => (FactoryHelperSession) Instance._Session;
 
         public override void LoadContent(bool firstLoad) {
             base.LoadContent(firstLoad);
@@ -28,7 +28,6 @@ namespace FactoryHelper {
             FactoryHelperHooks.Load();
         }
 
-        public override void Unload() {
-        }
+        public override void Unload() { }
     }
 }

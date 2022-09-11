@@ -16,7 +16,7 @@ namespace FactoryHelper.Entities {
         private readonly int _maximum;
         private readonly bool _isMetal;
         private readonly bool _isRandom;
-        private readonly HashSet<ThrowBox> _boxes = new HashSet<ThrowBox>();
+        private readonly HashSet<ThrowBox> _boxes = new();
         private readonly bool _fromTop;
         private readonly bool _tutorial;
 
@@ -66,7 +66,7 @@ namespace FactoryHelper.Entities {
             if (_maximum <= 0 || _boxes.Count < _maximum) {
                 float posY = _fromTop ? SceneAs<Level>().Bounds.Top - 15 : Position.Y;
                 float posX = _fromTop ? Position.X : GetClosestPositionH();
-                ThrowBox crate = new ThrowBox(
+                ThrowBox crate = new(
                     position: new Vector2(posX, posY),
                     isMetal: _isRandom ? Calc.Random.Chance(0.5f) : _isMetal,
                     tutorial: _tutorial
@@ -79,11 +79,7 @@ namespace FactoryHelper.Entities {
 
         private float GetClosestPositionH() {
             Level level = SceneAs<Level>();
-            if (Math.Abs(Left - level.Bounds.Left) < Math.Abs(Right - level.Bounds.Right)) {
-                return level.Bounds.Left - 15f;
-            } else {
-                return level.Bounds.Right - 1f;
-            }
+            return Math.Abs(Left - level.Bounds.Left) < Math.Abs(Right - level.Bounds.Right) ? level.Bounds.Left - 15f : level.Bounds.Right - 1f;
         }
     }
 }

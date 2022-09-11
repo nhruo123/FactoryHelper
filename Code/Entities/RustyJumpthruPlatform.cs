@@ -29,15 +29,16 @@ namespace FactoryHelper.Entities {
                 int y;
                 if (i == 0) {
                     x = 0;
-                    y = ((!CollideCheck<Solid>(Position + new Vector2(-1f, 0f))) ? 1 : 0);
+                    y = (!CollideCheck<Solid>(Position + new Vector2(-1f, 0f))) ? 1 : 0;
                 } else if (i == _columns - 1) {
                     x = num - 1;
-                    y = ((!CollideCheck<Solid>(Position + new Vector2(1f, 0f))) ? 1 : 0);
+                    y = (!CollideCheck<Solid>(Position + new Vector2(1f, 0f))) ? 1 : 0;
                 } else {
                     x = 1 + Calc.Random.Next(num - 2);
                     y = Calc.Random.Choose(0, 1);
                 }
-                Image image = new Image(mTexture.GetSubtexture(x * 8, y * 8, 8, 8)) {
+
+                Image image = new(mTexture.GetSubtexture(x * 8, y * 8, 8, 8)) {
                     X = i * 8
                 };
                 Add(image);

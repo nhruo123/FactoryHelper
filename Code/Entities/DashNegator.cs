@@ -8,13 +8,7 @@ using System;
 namespace FactoryHelper.Entities {
     [CustomEntity("FactoryHelper/DashNegator")]
     public class DashNegator : Entity {
-        public FactoryActivator Activator;
-
-        private Sprite[] _turretSprites;
-        private Solid[] _turretSolids;
-        private float _particleSpanPeriod;
-
-        public static readonly ParticleType P_NegatorField = new ParticleType {
+        public static readonly ParticleType P_NegatorField = new() {
             Size = 1f,
             Color = Calc.HexToColor("800000") * 0.8f,
             Color2 = Calc.HexToColor("c40000") * 0.8f,
@@ -25,12 +19,17 @@ namespace FactoryHelper.Entities {
             SpinMin = 0.002f,
             SpinMax = 0.005f,
             Acceleration = Vector2.Zero,
-            DirectionRange = (float) Math.PI * 2f,
+            DirectionRange = (float)Math.PI * 2f,
             Direction = 0f,
             LifeMin = 1.5f,
             LifeMax = 2.5f
         };
-        private PlayerCollider _pc;
+
+        public FactoryActivator Activator;
+
+        private readonly Sprite[] _turretSprites;
+        private readonly Solid[] _turretSolids;
+        private readonly float _particleSpanPeriod;
 
         public DashNegator(EntityData data, Vector2 offset)
             : this(data.Position + offset, data.Width, data.Height, data.Attr("activationId"), data.Bool("startActive")) {
@@ -58,7 +57,7 @@ namespace FactoryHelper.Entities {
                 SolidChecker = IsRiding,
                 OnDestroy = RemoveSelf
             });
-            Add(_pc = new PlayerCollider(OnPlayer));
+            Add(new PlayerCollider(OnPlayer));
 
             int length = width / 16;
             _turretSprites = new Sprite[length];
@@ -69,7 +68,7 @@ namespace FactoryHelper.Entities {
                 _turretSprites[i].Add("inactive", "turret", 1f, 0);
                 _turretSprites[i].Add("rest", "turret", 0.2f, "active", 0);
                 _turretSprites[i].Add("active", "turret", 0.05f, "rest");
-                _turretSprites[i].Position = new Vector2(-2 + 16 * i, -2);
+                _turretSprites[i].Position = new Vector2(-2 + (16 * i), -2);
 
                 _turretSolids[i] = new Solid(position + new Vector2(16 * i, 0), 16, 4, false);
             }
@@ -83,16 +82,18 @@ namespace FactoryHelper.Entities {
 
         public override void Added(Scene scene) {
             base.Added(scene);
-            foreach (var solid in _turretSolids) {
+            foreach (Solid solid in _turretSolids) {
                 scene.Add(solid);
             }
+
             Activator.HandleStartup(scene);
         }
 
         public override void Removed(Scene scene) {
-            foreach (var solid in _turretSolids) {
+            foreach (Solid solid in _turretSolids) {
                 scene.Remove(solid);
             }
+
             base.Removed(scene);
         }
 
@@ -116,31 +117,34 @@ namespace FactoryHelper.Entities {
                     Draw.Rect(left, Top, right - left, Height, Color.Red * 0.3f);
                 }
             }
+
             base.Render();
         }
 
         private void OnTurnOn() {
-            foreach (var sprite in _turretSprites) {
+            foreach (Sprite sprite in _turretSprites) {
                 sprite.Play("active", true);
             }
+
             Fizzle();
         }
 
         private void OnTurnOff() {
-            foreach (var sprite in _turretSprites) {
+            foreach (Sprite sprite in _turretSprites) {
                 sprite.Play("inactive");
             }
+
             Fizzle();
         }
 
         private void OnStartOn() {
-            foreach (var sprite in _turretSprites) {
+            foreach (Sprite sprite in _turretSprites) {
                 sprite.Play("active", true);
             }
         }
 
         private void OnStartOff() {
-            foreach (var sprite in _turretSprites) {
+            foreach (Sprite sprite in _turretSprites) {
                 sprite.Play("inactive");
             }
         }
@@ -162,8 +166,8 @@ namespace FactoryHelper.Entities {
 
         private void ShootClosestLaserToPlayer(Player player) {
             Audio.Play("event:/char/badeline/boss_laser_fire", player.Position);
-            Vector2 beamPosition = new Vector2(Position.X, Position.Y + 8);
-            beamPosition.X += Math.Min((int) (player.Center.X - Left) / 16 * 16, Width - 12) + 8;
+            Vector2 beamPosition = new(Position.X, Position.Y + 8);
+            beamPosition.X += Math.Min((int)(player.Center.X - Left) / 16 * 16, Width - 12) + 8;
             Scene.Add(new DashNegatorBeam(beamPosition));
         }
 
@@ -183,6 +187,7 @@ namespace FactoryHelper.Entities {
                     break;
                 }
             }
+
             return riding;
         }
     }

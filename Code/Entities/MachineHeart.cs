@@ -8,15 +8,14 @@ namespace FactoryHelper.Entities {
     [Tracked(false)]
     [CustomEntity("FactoryHelper/MachineHeart")]
     public class MachineHeart : Solid {
+        private readonly Sprite _backSprite;
         private Sprite _frontSprite;
-        private Sprite _backSprite;
         private int _stage = 0;
         private SoundSource _firstHitSfx;
         private VertexLight _light;
         private BloomPoint _bloom;
 
-        public MachineHeart(EntityData data, Vector2 offset) : this(data.Position + offset) {
-        }
+        public MachineHeart(EntityData data, Vector2 offset) : this(data.Position + offset) { }
 
         public MachineHeart(Vector2 position) : base(position, 24, 32, true) {
             Add(_backSprite = FactoryHelperModule.SpriteBank.Create("machineHeart_back"));
@@ -69,11 +68,13 @@ namespace FactoryHelper.Entities {
                 if (_firstHitSfx != null) {
                     _firstHitSfx.Stop();
                 }
+
                 _backSprite.Play("break");
                 Audio.Play("event:/new_content/game/10_farewell/fusebox_hit_2", Position);
                 Add(new Coroutine(CrystalBreakSound()));
                 _bloom.Visible = false;
             }
+
             _stage++;
             return DashCollisionResults.Rebound;
         }
@@ -90,6 +91,7 @@ namespace FactoryHelper.Entities {
                 Remove(_frontSprite);
                 _frontSprite = null;
             }
+
             if (_stage == 2 && _backSprite.CurrentAnimationID == "break1" && _backSprite.CurrentAnimationFrame == 3) {
                 _stage++;
                 CrystalDebris.Burst(Position, Color.DarkRed, false, 16);

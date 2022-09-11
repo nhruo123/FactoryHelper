@@ -22,12 +22,14 @@ namespace FactoryHelper.Components {
                 if (Collider != null) {
                     Entity.Collider = Collider;
                 }
+
                 if (steamWall.CollideCheck(Entity)) {
                     OnCollide(steamWall);
                     if (OneShot) {
                         ShouldDoChecks = false;
                     }
                 }
+
                 Entity.Collider = collider;
             }
         }

@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace FactoryHelper.Entities {
     [CustomEntity("FactoryHelper/FactoryActivatorDashBlock")]
     public class FactoryActivatorDashBlock : DashBlock {
-        private readonly HashSet<string> _activationIds = new HashSet<string>();
+        private readonly HashSet<string> _activationIds = new();
         private readonly bool permanent;
         private EntityID id;
 
@@ -25,6 +25,7 @@ namespace FactoryHelper.Entities {
                     _activationIds.Add(activationId);
                 }
             }
+
             permanent = data.Bool("permanent", true);
             this.id = id;
         }
@@ -48,6 +49,7 @@ namespace FactoryHelper.Entities {
             foreach (string activationId in _activationIds) {
                 ActivatePermanently(activationId);
             }
+
             FactoryHelperModule.Session.PermanentlyRemovedActivatorDashBlocks.Add(id);
         }
 

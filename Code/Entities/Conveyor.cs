@@ -12,14 +12,11 @@ namespace FactoryHelper.Entities {
     public class Conveyor : Solid {
         public const float ConveyorMoveSpeed = 40.0f;
 
-        public FactoryActivator Activator { get; }
-        public bool IsMovingLeft { get { return Activator.IsOn; } }
-        public bool IsBrokenDown { get; private set; } = false;
-
         private const string _spriteRoot = "objects/FactoryHelper/conveyor/";
         private const float _beltFrequency = 0.025f;
         private const float _gearFrequency = 0.05f;
-        private static readonly ParticleType _grindParticleRight = new ParticleType {
+
+        private static readonly ParticleType _grindParticleRight = new() {
             Size = 1f,
             Color = Calc.HexToColor("6b675d"),
             Color2 = Calc.HexToColor("db8d2e"),
@@ -28,12 +25,12 @@ namespace FactoryHelper.Entities {
             SpeedMin = 15f,
             SpeedMax = 20f,
             Acceleration = Vector2.UnitY * 2f,
-            DirectionRange = (float) Math.PI / 2f,
+            DirectionRange = (float)Math.PI / 2f,
             Direction = 0,
             LifeMin = 1.0f,
             LifeMax = 2.0f
         };
-        private static readonly ParticleType _grindParticleLeft = new ParticleType {
+        private static readonly ParticleType _grindParticleLeft = new() {
             Size = 1f,
             Color = Calc.HexToColor("6b675d"),
             Color2 = Calc.HexToColor("db8d2e"),
@@ -42,17 +39,16 @@ namespace FactoryHelper.Entities {
             SpeedMin = 15f,
             SpeedMax = 20f,
             Acceleration = Vector2.UnitY * 2f,
-            DirectionRange = (float) Math.PI / 2f,
-            Direction = (float) Math.PI,
+            DirectionRange = (float)Math.PI / 2f,
+            Direction = (float)Math.PI,
             LifeMin = 1.0f,
             LifeMax = 2.0f
         };
 
-        private Sprite[] _edgeSprites = new Sprite[2];
-        private Sprite[] _gearSprites = new Sprite[2];
+        private readonly Sprite[] _edgeSprites = new Sprite[2];
+        private readonly Sprite[] _gearSprites = new Sprite[2];
+        private readonly SoundSource _sfx;
         private Sprite[] _midSprites;
-        private SoundSource _sfx;
-
 
         public Conveyor(EntityData data, Vector2 offset)
             : this(
@@ -89,6 +85,10 @@ namespace FactoryHelper.Entities {
             Add(_sfx = new SoundSource() { Position = new Vector2(Width / 2, Height / 2) });
         }
 
+        public FactoryActivator Activator { get; }
+        public bool IsMovingLeft => Activator.IsOn;
+        public bool IsBrokenDown { get; private set; } = false;
+
         private void OnSteamWall(SteamWall obj) {
             Add(new Coroutine(Sparks()));
             StopAnimation();
@@ -106,15 +106,15 @@ namespace FactoryHelper.Entities {
                 _gearSprites[i].Position = new Vector2((Width - 16) * i, 0);
             }
 
-            _edgeSprites[1].Rotation = (float) Math.PI;
+            _edgeSprites[1].Rotation = (float)Math.PI;
             _edgeSprites[1].Position += new Vector2(16, 16);
 
-            _midSprites = new Sprite[(int) Width / 8 - 4];
+            _midSprites = new Sprite[((int)Width / 8) - 4];
 
             for (int i = 0; i < _midSprites.Length; i++) {
                 Add(_midSprites[i] = new Sprite(GFX.Game, _spriteRoot));
                 _midSprites[i].Add("left", "belt_mid", _beltFrequency, "left");
-                _midSprites[i].Position = new Vector2(16 + 8 * i, 0);
+                _midSprites[i].Position = new Vector2(16 + (8 * i), 0);
             }
         }
 

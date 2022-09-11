@@ -11,17 +11,9 @@ namespace FactoryHelper.Entities {
         "FactoryHelper/FanVertical = LoadVertical"
         )]
     public class Fan : Solid {
-        public static Entity LoadHorizontal(Level level, LevelData levelData, Vector2 offset, EntityData data) => new Fan(data, offset, Directions.Horizontal);
-        public static Entity LoadVertical(Level level, LevelData levelData, Vector2 offset, EntityData data) => new Fan(data, offset, Directions.Vertical);
-
-        public enum Directions {
-            Horizontal,
-            Vertical
-        }
-
         public FactoryActivator Activator;
 
-        private Sprite _fanSprite;
+        private readonly Sprite _fanSprite;
         private float _percent;
         private bool _speedingUp;
 
@@ -59,13 +51,14 @@ namespace FactoryHelper.Entities {
                     break;
                 case Directions.Vertical:
                     _fanSprite.Scale.X = height / 24f;
-                    _fanSprite.Rotation = (float) Math.PI / 2;
+                    _fanSprite.Rotation = (float)Math.PI / 2;
                     break;
             }
+
             _fanSprite.Play("rotating", true);
 
             MTexture mTexture = GFX.Game["objects/FactoryHelper/fan/body0"];
-            int size = (int) Math.Max(width, height);
+            int size = (int)Math.Max(width, height);
             for (int i = 0; i < size; i += 8) {
                 int x;
                 Image image;
@@ -76,6 +69,7 @@ namespace FactoryHelper.Entities {
                 } else {
                     x = 1;
                 }
+
                 Add(image = new Image(mTexture.GetSubtexture(x * 8, 0, 8, 16)));
                 switch (direction) {
                     default:
@@ -83,14 +77,28 @@ namespace FactoryHelper.Entities {
                         image.X = i;
                         break;
                     case Directions.Vertical:
-                        image.Rotation = (float) Math.PI / 2;
+                        image.Rotation = (float)Math.PI / 2;
                         image.Y = i;
                         image.X += 16;
                         break;
                 }
             }
+
             SurfaceSoundIndex = 7;
             Add(new LightOcclude(0.5f));
+        }
+
+        public enum Directions {
+            Horizontal,
+            Vertical
+        }
+
+        public static Entity LoadHorizontal(Level level, LevelData levelData, Vector2 offset, EntityData data) {
+            return new Fan(data, offset, Directions.Horizontal);
+        }
+
+        public static Entity LoadVertical(Level level, LevelData levelData, Vector2 offset, EntityData data) {
+            return new Fan(data, offset, Directions.Vertical);
         }
 
         private void OnSteamWall(SteamWall obj) {
@@ -104,6 +112,7 @@ namespace FactoryHelper.Entities {
             } else if (!_speedingUp && (_percent > 0f)) {
                 _percent = Calc.Approach(_percent, 0f, Engine.DeltaTime / 1.5f);
             }
+
             _fanSprite.Rate = _percent;
         }
 

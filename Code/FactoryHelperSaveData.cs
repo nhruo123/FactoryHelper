@@ -4,6 +4,6 @@ using System.Collections.Generic;
 
 namespace FactoryHelper {
     public class FactoryHelperSaveData : EverestModuleSaveData {
-        public HashSet<EntityID> RustBerries = new HashSet<EntityID>();
+        public HashSet<EntityID> RustBerries = new();
     }
 }

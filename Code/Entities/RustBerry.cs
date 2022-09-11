@@ -8,28 +8,30 @@ using System.Collections;
 namespace FactoryHelper.Entities {
     [CustomEntity("FactoryHelper/RustBerry")]
     public class RustBerry : Entity {
-        public static ParticleType P_Glow = new ParticleType(Strawberry.P_Glow) { Color = Calc.HexToColor("fc5a03"), Color2 = Calc.HexToColor("9e4210") };
+        public static ParticleType P_Glow = new(Strawberry.P_Glow) { 
+            Color = Calc.HexToColor("fc5a03"), 
+            Color2 = Calc.HexToColor("9e4210") 
+        };
         public static ParticleType P_GhostGlow = Strawberry.P_GhostGlow;
+
         public EntityID ID;
         public Follower Follower;
         public bool ReturnHomeWhenLost = true;
 
-        private Sprite _sprite;
-        private Sprite _gearSprite;
+        private readonly Sprite _sprite;
+        private readonly Sprite _gearSprite;
+        private readonly bool _isGhostBerry;
         private Wiggler _wiggler;
-        private Wiggler _rotateWiggler;
         private BloomPoint _bloom;
         private VertexLight _light;
         private Tween _lightTween;
-        private float _wobble = 0f;
         private Vector2 _start;
         private float _collectTimer = 0f;
         private bool _collected = false;
-        private bool _isGhostBerry;
 
         public RustBerry(EntityData data, Vector2 offset, EntityID gid) {
             ID = gid;
-            Position = (_start = data.Position + offset);
+            Position = _start = data.Position + offset;
             _isGhostBerry = CheckRustBerry();
             Depth = -100;
             Collider = new Hitbox(14f, 14f, -7f, -7f);
@@ -52,10 +54,10 @@ namespace FactoryHelper.Entities {
         public override void Added(Scene scene) {
             base.Added(scene);
             Add(_wiggler = Wiggler.Create(0.4f, 4f, delegate (float v) {
-                _sprite.Scale = Vector2.One * (1f + v * 0.35f);
+                _sprite.Scale = Vector2.One * (1f + (v * 0.35f));
             }));
-            Add(_rotateWiggler = Wiggler.Create(0.5f, 4f, delegate (float v) {
-                _sprite.Rotation = v * 30f * ((float) Math.PI / 180f);
+            Add(Wiggler.Create(0.5f, 4f, delegate (float v) {
+                _sprite.Rotation = v * 30f * ((float)Math.PI / 180f);
             }));
             Add(_bloom = new BloomPoint(_isGhostBerry ? 0.5f : 1f, 12f));
             Add(_light = new VertexLight(Color.RosyBrown, 1f, 16, 24));
@@ -67,20 +69,15 @@ namespace FactoryHelper.Entities {
 
         public override void Update() {
             if (!_collected) {
-                _wobble += Engine.DeltaTime * 4f;
-                Sprite obj = _sprite;
-                BloomPoint bloomPoint = _bloom;
-                float num2 = _light.Y = (float) Math.Sin(_wobble) * 2f;
-                float num5 = obj.Y = (bloomPoint.Y = num2);
                 int followIndex = Follower.FollowIndex;
                 if (Follower.Leader != null && Follower.DelayTimer <= 0f) {
-                    Player player = Follower.Leader.Entity as Player;
                     bool canCollect = false;
-                    if (player != null && player.Scene != null && !player.StrawberriesBlocked) {
+                    if (Follower.Leader.Entity is Player player && player.Scene != null && !player.StrawberriesBlocked) {
                         if (player.OnSafeGround && player.StateMachine.State != 13) {
                             canCollect = true;
                         }
                     }
+
                     if (canCollect) {
                         _collectTimer += Engine.DeltaTime;
                         if (_collectTimer > 0.15f) {
@@ -95,8 +92,9 @@ namespace FactoryHelper.Entities {
                     }
                 }
             }
+
             base.Update();
-            if (Follower.Leader != null && base.Scene.OnInterval(0.08f)) {
+            if (Follower.Leader != null && Scene.OnInterval(0.08f)) {
                 ParticleType type = _isGhostBerry ? P_GhostGlow : P_Glow;
                 SceneAs<Level>().ParticlesFG.Emit(type, Position + Calc.Random.Range(-Vector2.One * 6f, Vector2.One * 6f));
             }
@@ -122,24 +120,23 @@ namespace FactoryHelper.Entities {
                 player.Leader.GainFollower(Follower);
                 _wiggler.Start();
                 _sprite.Play("noFlash" + (_isGhostBerry ? "Ghost" : ""));
-                base.Depth = -1000000;
+                Depth = -1000000;
             }
         }
 
         public void OnCollect() {
             if (!_collected) {
-                int collectIndex = 0;
                 _collected = true;
                 if (Follower.Leader != null) {
                     Player player = Follower.Leader.Entity as Player;
-                    collectIndex = player.StrawberryCollectIndex;
                     player.StrawberryCollectIndex++;
                     player.StrawberryCollectResetTimer = 2.5f;
                     Follower.Leader.LoseFollower(Follower);
                 }
+
                 SaveData.Instance.AddStrawberry(ID, false);
                 RegisterCollected();
-                Session session = (base.Scene as Level).Session;
+                Session session = (Scene as Level).Session;
                 session.DoNotLoad.Add(ID);
                 session.UpdateLevelStartDashes();
                 Add(new Coroutine(CollectRoutine()));
@@ -155,7 +152,6 @@ namespace FactoryHelper.Entities {
         }
 
         private IEnumerator CollectRoutine() {
-            bool flag = Scene is Level;
             Tag = Tags.TransitionUpdate;
             Depth = -2000010;
             Audio.Play("event:/game/general/strawberry_get", Position, "colour", 3);
@@ -165,6 +161,7 @@ namespace FactoryHelper.Entities {
             while (_sprite.Animating) {
                 yield return null;
             }
+
             Scene.Add(new RustBerryPoints(Position, _isGhostBerry));
             RemoveSelf();
         }
@@ -176,8 +173,8 @@ namespace FactoryHelper.Entities {
                     Vector2 vector = (_start - Position).SafeNormalize();
                     float num = Vector2.Distance(Position, _start);
                     float scaleFactor = Calc.ClampedMap(num, 16f, 120f, 16f, 96f);
-                    Vector2 control = _start + vector * 16f + vector.Perpendicular() * scaleFactor * Calc.Random.Choose(1, -1);
-                    SimpleCurve curve = new SimpleCurve(Position, _start, control);
+                    Vector2 control = _start + (vector * 16f) + (vector.Perpendicular() * scaleFactor * Calc.Random.Choose(1, -1));
+                    SimpleCurve curve = new(Position, _start, control);
                     Tween tween = Tween.Create(Tween.TweenMode.Oneshot, Ease.SineOut, MathHelper.Max(num / 100f, 0.4f), start: true);
                     tween.OnUpdate = delegate (Tween f) {
                         strawberry.Position = curve.GetPoint(f.Eased);

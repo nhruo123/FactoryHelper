@@ -7,10 +7,10 @@ using Monocle;
 namespace FactoryHelper.Triggers {
     [CustomEntity("FactoryHelper/SpawnSteamWallTrigger")]
     public class SpawnSteamWallTrigger : Trigger {
+        private readonly float speed = 1f;
         private bool _spawned = false;
+        private Color overrideColor = new(1f, 1f, 1f);
 
-        private float speed = 1f;
-        private Color overrideColor = new Color(1f, 1f, 1f);
         public SpawnSteamWallTrigger(EntityData data, Vector2 offset) : base(data, offset) {
             speed = data.Float("speed", defaultValue: 1f);
             overrideColor = Calc.HexToColor(data.Attr("color", defaultValue: "ffffff"));
@@ -26,6 +26,7 @@ namespace FactoryHelper.Triggers {
                 } else {
                     steamWall.AdvanceToCamera();
                 }
+
                 _spawned = true;
             }
         }

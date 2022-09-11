@@ -8,18 +8,16 @@ using System.Collections.Generic;
 namespace FactoryHelper.Triggers {
     [CustomEntity("FactoryHelper/FactoryActivationTrigger")]
     public class FactoryActivationTrigger : Trigger {
-        public FactoryActivator Activator { get; }
-
         private readonly bool _resetOnLeave;
         private readonly bool _persistent;
-        private readonly HashSet<string> _activationIds = new HashSet<string>();
+        private readonly HashSet<string> _activationIds = new();
         private bool _hasFired;
 
         public FactoryActivationTrigger(EntityData data, Vector2 offset) : base(data, offset) {
             string[] activationIds = data.Attr("activationIds", "").Split(',');
 
             _persistent = data.Bool("persistent", false);
-            _resetOnLeave = _persistent ? false : data.Bool("resetOnLeave", false);
+            _resetOnLeave = !_persistent && data.Bool("resetOnLeave", false);
             Add(Activator = new FactoryActivator());
             Activator.ActivationId = data.Attr("ownActivationId") == string.Empty ? null : data.Attr("ownActivationId");
             Activator.StartOn = Activator.ActivationId == null;
@@ -30,6 +28,8 @@ namespace FactoryHelper.Triggers {
                 }
             }
         }
+
+        public FactoryActivator Activator { get; }
 
         public override void OnEnter(Player player) {
             base.OnEnter(player);
@@ -68,7 +68,7 @@ namespace FactoryHelper.Triggers {
 
         private void SetSessionTags(bool activating = true) {
             if (_persistent) {
-                Level level = (Scene as Level);
+                Level level = Scene as Level;
                 foreach (string activationId in _activationIds) {
                     level.Session.SetFlag($"FactoryActivation:{activationId}", activating);
                 }

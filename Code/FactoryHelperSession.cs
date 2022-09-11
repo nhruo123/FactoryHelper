@@ -5,9 +5,8 @@ using System.Collections.Generic;
 
 namespace FactoryHelper {
     public class FactoryHelperSession : EverestModuleSession {
-        public HashSet<EntityID> Batteries = new HashSet<EntityID>();
-        public HashSet<EntityID> PermanentlyRemovedActivatorDashBlocks = new HashSet<EntityID>();
-
+        public HashSet<EntityID> Batteries = new();
+        public HashSet<EntityID> PermanentlyRemovedActivatorDashBlocks = new();
         public Vector2? SpecialBoxPosition;
         public Session OriginalSession;
         public string SpecialBoxLevel;

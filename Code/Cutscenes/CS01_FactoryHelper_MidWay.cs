@@ -4,7 +4,7 @@ using Monocle;
 using System.Collections;
 
 namespace FactoryHelper.Cutscenes {
-    class CS01_FactoryHelper_MidWay : CutsceneEntity {
+    internal class CS01_FactoryHelper_MidWay : CutsceneEntity {
         private readonly Player _player;
 
         public CS01_FactoryHelper_MidWay(Player player) {
@@ -20,7 +20,8 @@ namespace FactoryHelper.Cutscenes {
             while (!_player.OnGround()) {
                 yield return null;
             }
-            yield return PanCamera(_player.CameraTarget + Vector2.UnitX * 120f, 0.5f);
+
+            yield return PanCamera(_player.CameraTarget + (Vector2.UnitX * 120f), 0.5f);
             yield return 1f;
             yield return Textbox.Say("KaydenFox_FactoryMod_1_Factory_A_MidWay", WalkRight, AfterLookDown);
             EndCutscene(level);
@@ -32,7 +33,6 @@ namespace FactoryHelper.Cutscenes {
             yield return PanCamera(_player.CameraTarget + new Vector2(120f, 320f), 0.2f);
         }
 
-
         private IEnumerator AfterLookDown() {
             yield return PanCamera(_player.CameraTarget, 0.6f);
         }
@@ -40,7 +40,7 @@ namespace FactoryHelper.Cutscenes {
         private IEnumerator PanCamera(Vector2 to, float speed) {
             Vector2 from = Level.Camera.Position;
             for (float p = 0f; p < 1f; p += Engine.DeltaTime * speed) {
-                Level.Camera.Position = from + (to - from) * Ease.QuadInOut(p);
+                Level.Camera.Position = from + ((to - from) * Ease.QuadInOut(p));
                 yield return null;
             }
         }

@@ -12,17 +12,15 @@ namespace FactoryHelper.Triggers {
         }
 
         private void OnCollide(Holdable holdable) {
-            Entity item = holdable.Entity;
-            if (item != null && item is ThrowBox) {
-                (item as ThrowBox).StopBeingSpecial();
+            if (holdable.Entity is ThrowBox box) {
+                box.StopBeingSpecial();
             }
         }
 
         public override void OnEnter(Player player) {
             base.OnEnter(player);
-            Entity heldItem = player.Holding?.Entity;
-            if (heldItem != null || heldItem is ThrowBox) {
-                (heldItem as ThrowBox).StopBeingSpecial();
+            if (player.Holding?.Entity is ThrowBox box) {
+                box.StopBeingSpecial();
             }
         }
     }

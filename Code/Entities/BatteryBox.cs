@@ -12,19 +12,10 @@ namespace FactoryHelper.Entities {
         private readonly EntityID _id;
         private readonly Sprite _boxSprite;
         private readonly Sprite _batterySprite;
-        private readonly HashSet<string> _activationIds = new HashSet<string>();
+        private readonly HashSet<string> _activationIds = new();
+        private readonly SoundSource _sfx;
+        private readonly VertexLight _light;
         private bool _inserting = false;
-        private SoundSource _sfx;
-        private VertexLight _light;
-
-        public bool Activated {
-            get {
-                return (Scene as Level).Session.GetFlag($"BatteryBox:{_id.Key}");
-            }
-            set {
-                (Scene as Level).Session.SetFlag($"BatteryBox:{_id.Key}", value);
-            }
-        }
 
         public BatteryBox(EntityData data, Vector2 offset) : this(data.Position + offset, data.Attr("activationIds")) {
             _id = new EntityID(data.Level.Name, data.ID);
@@ -51,6 +42,11 @@ namespace FactoryHelper.Entities {
             _light.Visible = false;
 
             Depth = 8499;
+        }
+
+        public bool Activated {
+            get => (Scene as Level).Session.GetFlag($"BatteryBox:{_id.Key}");
+            set => (Scene as Level).Session.SetFlag($"BatteryBox:{_id.Key}", value);
         }
 
         public override void Render() {
@@ -84,6 +80,7 @@ namespace FactoryHelper.Entities {
             while (battery.Turning) {
                 yield return null;
             }
+
             _sfx.Stop();
             _sfx.Play("event:/game/03_resort/door_metal_close");
             Activated = true;

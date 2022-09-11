@@ -7,6 +7,7 @@ using System.Collections.Generic;
 namespace FactoryHelper.Entities {
     public class SteamPoof : Entity {
         public Action<SteamPoof> OnRemoved;
+
         protected Sprite _sprite;
         protected Color _color = Color.White;
 
@@ -25,16 +26,17 @@ namespace FactoryHelper.Entities {
             Add(_sprite);
         }
 
-
         public static IEnumerable<SteamPoof> Create(Scene scene, Vector2 position, Vector2 range, Color color, int count = 1, float fade = 1f, Action<SteamPoof> onRemoved = null) {
             SteamPoof[] poofs = new SteamPoof[count];
             for (int i = 0; i < count; i++) {
-                SteamPoof poof = new SteamPoof(new Vector2(position.X - range.X / 2 + Calc.Random.NextFloat(range.X), position.Y - range.Y / 2 + Calc.Random.NextFloat(range.Y)), fade, color);
-                poof._color = color;
+                SteamPoof poof = new(new Vector2(position.X - (range.X / 2) + Calc.Random.NextFloat(range.X), position.Y - (range.Y / 2) + Calc.Random.NextFloat(range.Y)), fade, color) {
+                    _color = color
+                };
                 scene.Add(poof);
                 poofs[i] = poof;
                 poof.OnRemoved = onRemoved;
             }
+
             return poofs;
         }
 
@@ -50,5 +52,4 @@ namespace FactoryHelper.Entities {
             base.Removed(scene);
         }
     }
-
 }

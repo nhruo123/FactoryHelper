@@ -25,6 +25,7 @@ namespace FactoryHelper.Components {
                     Move(conveyor.IsMovingLeft ? -Conveyor.ConveyorMoveSpeed : Conveyor.ConveyorMoveSpeed);
                 }
             }
+
             IsOnConveyor = foundConveyor;
         }
     }

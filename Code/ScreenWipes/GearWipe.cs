@@ -6,31 +6,10 @@ using System;
 
 namespace FactoryHelper.ScreenWipes {
     public class GearWipe : ScreenWipe {
-        private struct Gear {
-            public const int ToothCount = 8;
+        private const int _gearCount = 8;
+        private const int _countPerTeeth = 16;
 
-            public float Scale;
-            public float Angle;
-            public float X;
-            public float Y;
-            public int Direction;
-
-            private const float _turnSpeed = 12f;
-
-            public Gear(int index) {
-                Scale = Calc.Random.NextFloat() * 0.2f + 0.8f;
-                Angle = Calc.Random.NextAngle();
-                X = Calc.Random.NextFloat(Engine.Width / 2) + index % 2 * Engine.Width / 2;
-                Y = Calc.Random.NextFloat(Engine.Height / 2) + index % 2 * Engine.Height / 2;
-                Direction = Calc.Random.NextFloat() > 0.5 ? 1 : -1;
-            }
-
-            public void Update() {
-                Angle += Direction * _turnSpeed * Engine.DeltaTime;
-            }
-        }
-
-        public static readonly BlendState SubtractBlendmode = new BlendState {
+        public static readonly BlendState SubtractBlendmode = new() {
             ColorSourceBlend = Blend.One,
             ColorDestinationBlend = Blend.One,
             ColorBlendFunction = BlendFunction.ReverseSubtract,
@@ -39,11 +18,8 @@ namespace FactoryHelper.ScreenWipes {
             AlphaBlendFunction = BlendFunction.Add
         };
 
-        private const int _gearCount = 8;
-        private const int _countPerTeeth = 16;
-
-        private Gear[] _gears = new Gear[_gearCount];
-        private VertexPositionColor[] _verts = new VertexPositionColor[_gearCount * _countPerTeeth * Gear.ToothCount * 3];
+        private readonly Gear[] _gears = new Gear[_gearCount];
+        private readonly VertexPositionColor[] _verts = new VertexPositionColor[_gearCount * _countPerTeeth * Gear.ToothCount * 3];
         private bool _hasDrawn;
 
         public GearWipe(Scene scene, bool wipeIn, Action onComplete = null) : base(scene, wipeIn, onComplete) {
@@ -52,7 +28,7 @@ namespace FactoryHelper.ScreenWipes {
             }
 
             for (int j = 0; j < _verts.Length; j++) {
-                _verts[j].Color = (WipeIn ? Color.Black : Color.White);
+                _verts[j].Color = WipeIn ? Color.Black : Color.White;
             }
         }
 
@@ -74,6 +50,7 @@ namespace FactoryHelper.ScreenWipes {
             } else if (_hasDrawn) {
                 Draw.SpriteBatch.Draw(Celeste.Celeste.WipeTarget, new Vector2(-1f, -1f), Color.White);
             }
+
             Draw.SpriteBatch.End();
         }
 
@@ -87,6 +64,7 @@ namespace FactoryHelper.ScreenWipes {
                 Draw.Rect(-1f, (1080f - num) * 0.5f, 1922f, num, (!WipeIn) ? Color.White : Color.Black);
                 Draw.SpriteBatch.End();
             }
+
             float sizeMultiplier = Ease.CubeIn(Percent);
             float baseSize = 1000f;
 
@@ -96,14 +74,38 @@ namespace FactoryHelper.ScreenWipes {
                     for (int k = 0; k < _countPerTeeth; k++) {
                         Gear gear = _gears[i];
                         float size = k >= 8 ? baseSize : 1.2f * baseSize;
-                        float angle = gear.Angle + (j * Calc.Circle / Gear.ToothCount) + k * Calc.Circle / Gear.ToothCount / _countPerTeeth;
+                        float angle = gear.Angle + (j * Calc.Circle / Gear.ToothCount) + (k * Calc.Circle / Gear.ToothCount / _countPerTeeth);
                         _verts[index++].Position = new Vector3(Calc.AngleToVector(angle, size * sizeMultiplier * gear.Scale) + new Vector2(gear.X, gear.Y), 0f);
                         angle += Calc.Circle / Gear.ToothCount / _countPerTeeth;
                         _verts[index++].Position = new Vector3(Calc.AngleToVector(angle, size * sizeMultiplier * gear.Scale) + new Vector2(gear.X, gear.Y), 0f);
                         _verts[index++].Position = new Vector3(new Vector2(gear.X, gear.Y), 0f);
                     }
                 }
+
                 GFX.DrawVertices(Matrix.Identity, _verts, _verts.Length);
+            }
+        }
+
+        private struct Gear {
+            public const int ToothCount = 8;
+            private const float _turnSpeed = 12f;
+
+            public float Scale;
+            public float Angle;
+            public float X;
+            public float Y;
+            public int Direction;
+
+            public Gear(int index) {
+                Scale = (Calc.Random.NextFloat() * 0.2f) + 0.8f;
+                Angle = Calc.Random.NextAngle();
+                X = Calc.Random.NextFloat(Engine.Width / 2) + (index % 2 * Engine.Width / 2);
+                Y = Calc.Random.NextFloat(Engine.Height / 2) + (index % 2 * Engine.Height / 2);
+                Direction = Calc.Random.NextFloat() > 0.5 ? 1 : -1;
+            }
+
+            public void Update() {
+                Angle += Direction * _turnSpeed * Engine.DeltaTime;
             }
         }
     }

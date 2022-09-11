@@ -9,93 +9,38 @@ namespace FactoryHelper.Entities {
     [CustomEntity("FactoryHelper/KillerDebris")]
     [Tracked]
     public class KillerDebris : Entity {
-
-        private class Border : Entity {
-            private Entity[] drawing = new Entity[2];
-
-            public Border(Entity parent, Entity filler) {
-                drawing[0] = parent;
-                drawing[1] = filler;
-                base.Depth = parent.Depth + 2;
-            }
-
-            public override void Render() {
-                if (drawing[0].Visible) {
-                    DrawBorder(drawing[0]);
-                    DrawBorder(drawing[1]);
-                }
-            }
-
-            private void DrawBorder(Entity entity) {
-                if (entity != null) {
-                    foreach (Component component in entity.Components) {
-                        Image image = component as Image;
-                        if (image != null) {
-                            Color color = image.Color;
-                            Vector2 position = image.Position;
-                            image.Color = Color.Black;
-                            image.Position = position + new Vector2(0f, -1f);
-                            image.Render();
-                            image.Position = position + new Vector2(0f, 1f);
-                            image.Render();
-                            image.Position = position + new Vector2(-1f, 0f);
-                            image.Render();
-                            image.Position = position + new Vector2(1f, 0f);
-                            image.Render();
-                            image.Color = color;
-                            image.Position = position;
-                        }
-                    }
-                }
-            }
-        }
+        public const float ParticleInterval = 0.02f;
 
         public static ParticleType P_Move;
 
-        public const float ParticleInterval = 0.02f;
+        private static readonly Dictionary<DebrisColor, string> fgTextureLookup = new() {
+            {
+                DebrisColor.Silver,
+                "danger/FactoryHelper/debris/fg_silver"
+            },
+            {
+                DebrisColor.Bronze,
+                "danger/FactoryHelper/debris/fg_bronze"
+            }
+        };
+        private static readonly Dictionary<DebrisColor, string> bgTextureLookup = new() {
+            {
+                DebrisColor.Silver,
+                "danger/FactoryHelper/debris/bg_silver"
+            },
+            {
+                DebrisColor.Bronze,
+                "danger/FactoryHelper/debris/bg_bronze"
+            }
+        };
 
-        public enum DebrisColor {
-            Silver,
-            Bronze
-        }
-
-        private static Dictionary<DebrisColor, string> fgTextureLookup = new Dictionary<DebrisColor, string>
-    {
-        {
-            DebrisColor.Silver,
-            "danger/FactoryHelper/debris/fg_silver"
-        },
-        {
-            DebrisColor.Bronze,
-            "danger/FactoryHelper/debris/fg_bronze"
-        }
-    };
-
-        private static Dictionary<DebrisColor, string> bgTextureLookup = new Dictionary<DebrisColor, string>
-    {
-        {
-            DebrisColor.Silver,
-            "danger/FactoryHelper/debris/bg_silver"
-        },
-        {
-            DebrisColor.Bronze,
-            "danger/FactoryHelper/debris/bg_bronze"
-        }
-    };
-
-        public bool AttachToSolid;
-
-        private Entity _filler;
-
-        private Border _border;
-
-        private float _offset = Calc.Random.NextFloat();
-
+        private readonly float _offset = Calc.Random.NextFloat();
+        private readonly int _randomSeed;
+        private readonly DebrisColor _color;
         private bool _expanded;
-
-        private int _randomSeed;
-
-        private DebrisColor _color;
+        public bool AttachToSolid;
+        private Entity _filler;
+        private Border _border;
 
         public KillerDebris(Vector2 position, bool attachToSolid, string color)
             : base(position) {
@@ -115,7 +60,13 @@ namespace FactoryHelper.Entities {
                     OnDestroy = RemoveSelf
                 });
             }
+
             _randomSeed = Calc.Random.Next();
+        }
+
+        public enum DebrisColor {
+            Silver,
+            Bronze
         }
 
         public KillerDebris(EntityData data, Vector2 offset)
@@ -148,13 +99,15 @@ namespace FactoryHelper.Entities {
                 if (Scene.OnInterval(0.25f, _offset) && !InView()) {
                     Visible = false;
                 }
+
                 if (Scene.OnInterval(0.05f, _offset)) {
                     Player entity = Scene.Tracker.GetEntity<Player>();
                     if (entity != null) {
-                        Collidable = (Math.Abs(entity.X - X) < 256f && Math.Abs(entity.Y - Y) < 128f);
+                        Collidable = Math.Abs(entity.X - X) < 256f && Math.Abs(entity.Y - Y) < 128f;
                     }
                 }
             }
+
             if (_filler != null) {
                 _filler.Position = Position;
             }
@@ -173,21 +126,26 @@ namespace FactoryHelper.Entities {
                 if (!SolidCheck(new Vector2(X - 4f, Y - 4f))) {
                     Add(new Image(mTexture.GetSubtexture(0, 0, 14, 14)).SetOrigin(12f, 12f));
                 }
+
                 if (!SolidCheck(new Vector2(X + 4f, Y - 4f))) {
                     Add(new Image(mTexture.GetSubtexture(10, 0, 14, 14)).SetOrigin(2f, 12f));
                 }
+
                 if (!SolidCheck(new Vector2(X + 4f, Y + 4f))) {
                     Add(new Image(mTexture.GetSubtexture(10, 10, 14, 14)).SetOrigin(2f, 2f));
                 }
+
                 if (!SolidCheck(new Vector2(X - 4f, Y + 4f))) {
                     Add(new Image(mTexture.GetSubtexture(0, 10, 14, 14)).SetOrigin(12f, 2f));
                 }
+
                 List<Entity> entities = Scene.Tracker.GetEntities<KillerDebris>();
                 foreach (KillerDebris item in entities) {
                     if (item != this && item.AttachToSolid == AttachToSolid && item.X >= X && (item.Position - Position).Length() < 24f) {
-                        AddSprite((Position + item.Position) / 2f - Position);
+                        AddSprite(((Position + item.Position) / 2f) - Position);
                     }
                 }
+
                 Scene.Add(_border = new Border(this, _filler));
                 _expanded = true;
                 Calc.PopRandom();
@@ -199,10 +157,12 @@ namespace FactoryHelper.Entities {
                 Scene.Add(_filler = new Entity(Position));
                 _filler.Depth = Depth + 1;
             }
+
             List<MTexture> atlasSubtextures = GFX.Game.GetAtlasSubtextures(bgTextureLookup[_color]);
-            Image image = new Image(Calc.Random.Choose(atlasSubtextures));
-            image.Position = offset;
-            image.Rotation = Calc.Random.Choose(0, 1, 2, 3) * ((float) Math.PI / 2f);
+            Image image = new(Calc.Random.Choose(atlasSubtextures)) {
+                Position = offset,
+                Rotation = Calc.Random.Choose(0, 1, 2, 3) * ((float)Math.PI / 2f)
+            };
             image.CenterOrigin();
             _filler.Add(image);
         }
@@ -211,12 +171,14 @@ namespace FactoryHelper.Entities {
             if (AttachToSolid) {
                 return false;
             }
+
             List<Solid> list = Scene.CollideAll<Solid>(position);
             foreach (Solid item in list) {
                 if (item is SolidTiles) {
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -224,14 +186,17 @@ namespace FactoryHelper.Entities {
             if (_filler != null) {
                 _filler.RemoveSelf();
             }
+
             _filler = null;
             if (_border != null) {
                 _border.RemoveSelf();
             }
+
             _border = null;
             foreach (Image item in Components.GetAll<Image>()) {
                 item.RemoveSelf();
             }
+
             _expanded = false;
         }
 
@@ -259,10 +224,51 @@ namespace FactoryHelper.Entities {
             if (_filler != null && _filler.Scene == scene) {
                 _filler.RemoveSelf();
             }
+
             if (_border != null && _border.Scene == scene) {
                 _border.RemoveSelf();
             }
+
             base.Removed(scene);
+        }
+
+        private class Border : Entity {
+            private readonly Entity[] drawing = new Entity[2];
+
+            public Border(Entity parent, Entity filler) {
+                drawing[0] = parent;
+                drawing[1] = filler;
+                Depth = parent.Depth + 2;
+            }
+
+            public override void Render() {
+                if (drawing[0].Visible) {
+                    DrawBorder(drawing[0]);
+                    DrawBorder(drawing[1]);
+                }
+            }
+
+            private void DrawBorder(Entity entity) {
+                if (entity != null) {
+                    foreach (Component component in entity.Components) {
+                        if (component is Image image) {
+                            Color color = image.Color;
+                            Vector2 position = image.Position;
+                            image.Color = Color.Black;
+                            image.Position = position + new Vector2(0f, -1f);
+                            image.Render();
+                            image.Position = position + new Vector2(0f, 1f);
+                            image.Render();
+                            image.Position = position + new Vector2(-1f, 0f);
+                            image.Render();
+                            image.Position = position + new Vector2(1f, 0f);
+                            image.Render();
+                            image.Color = color;
+                            image.Position = position;
+                        }
+                    }
+                }
+            }
         }
     }
 }

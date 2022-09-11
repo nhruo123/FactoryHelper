@@ -8,31 +8,19 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace FactoryHelper.Cutscenes {
-    class FactoryIntroVignette : Scene {
+    internal class FactoryIntroVignette : Scene {
 
-        private Session session;
-
-        private string areaMusic;
-
+        private readonly Session session;
+        private readonly string areaMusic;
+        private readonly HudRenderer hud;
+        private readonly Textbox textbox;
         private float fade = 0f;
-
         private TextMenu menu;
-
         private float pauseFade = 0f;
-
-        private HudRenderer hud;
-
         private bool exiting;
-
         private Coroutine textCoroutine;
-
         private float textAlpha = 0f;
-
-        private Textbox textbox;
-
         private EventInstance ringtone;
-
-        public bool CanPause => menu == null;
 
         public FactoryIntroVignette(Session session, HiresSnow snow = null) {
             this.session = session;
@@ -44,6 +32,8 @@ namespace FactoryHelper.Cutscenes {
             textbox = new Textbox("KaydenFox_FactoryMod_1_Factory_A_Intro");
             textCoroutine = new Coroutine(TextSequence());
         }
+
+        public bool CanPause => menu == null;
 
         private IEnumerator TextSequence() {
             yield return 1f;
@@ -78,6 +68,7 @@ namespace FactoryHelper.Cutscenes {
             } else if (!exiting) {
                 menu.Update();
             }
+
             pauseFade = Calc.Approach(pauseFade, (menu != null) ? 1 : 0, Engine.DeltaTime * 8f);
             hud.BackgroundFade = Calc.Approach(hud.BackgroundFade, (menu != null) ? 0.6f : 0f, Engine.DeltaTime * 3f);
             fade = Calc.Approach(fade, 0f, Engine.DeltaTime);
@@ -89,7 +80,7 @@ namespace FactoryHelper.Cutscenes {
             Add(menu = new TextMenu());
             menu.Add(new TextMenu.Button(Dialog.Clean("intro_vignette_resume")).Pressed(CloseMenu));
             menu.Add(new TextMenu.Button(Dialog.Clean("intro_vignette_skip")).Pressed(StartGame));
-            menu.OnCancel = (menu.OnESC = (menu.OnPause = CloseMenu));
+            menu.OnCancel = menu.OnESC = menu.OnPause = CloseMenu;
         }
 
         private void CloseMenu() {
@@ -98,6 +89,7 @@ namespace FactoryHelper.Cutscenes {
             if (menu != null) {
                 menu.RemoveSelf();
             }
+
             menu = null;
         }
 
@@ -109,11 +101,13 @@ namespace FactoryHelper.Cutscenes {
                 menu.RemoveSelf();
                 menu = null;
             }
-            FadeWipe fadeWipe = new FadeWipe(this, false, delegate {
+
+            FadeWipe fadeWipe = new(this, false, delegate {
                 Engine.Scene = new LevelLoader(session);
-            });
-            fadeWipe.OnUpdate = delegate (float f) {
-                textAlpha = Math.Min(textAlpha, 1f - f);
+            }) {
+                OnUpdate = delegate (float f) {
+                    textAlpha = Math.Min(textAlpha, 1f - f);
+                }
             };
             exiting = true;
         }
@@ -125,6 +119,7 @@ namespace FactoryHelper.Cutscenes {
                 if (fade > 0f) {
                     Draw.Rect(-1f, -1f, 1922f, 1082f, Color.Black * fade);
                 }
+
                 Draw.SpriteBatch.End();
             }
         }
@@ -133,6 +128,7 @@ namespace FactoryHelper.Cutscenes {
             foreach (SoundSource sound in Tracker.GetComponents<SoundSource>()) {
                 sound.Pause();
             }
+
             ringtone?.setPaused(true);
         }
 
@@ -140,15 +136,17 @@ namespace FactoryHelper.Cutscenes {
             foreach (SoundSource sound in Tracker.GetComponents<SoundSource>()) {
                 sound.Resume();
             }
+
             ringtone?.setPaused(false);
         }
 
         private void StopSfx() {
-            List<Component> components = new List<Component>();
+            List<Component> components = new();
             components.AddRange(Tracker.GetComponents<SoundSource>());
             foreach (SoundSource sound in components) {
                 sound.RemoveSelf();
             }
+
             ringtone?.stop(STOP_MODE.IMMEDIATE);
         }
     }

@@ -31,6 +31,7 @@ namespace FactoryHelper.Triggers {
                 if (machineHeart != null) {
                     Scene.Add(new CS01_FactoryHelper_MachineHeart(player, machineHeart));
                 }
+
                 RemoveSelf();
             } else if (_eventName == "factory_ending" && !level.Session.GetFlag("FactoryHelper_factory_ending_trigger")) {
                 level.Session.SetFlag("FactoryHelper_factory_ending_trigger");

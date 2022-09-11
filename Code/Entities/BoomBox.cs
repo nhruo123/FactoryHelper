@@ -8,25 +8,19 @@ using System.Collections;
 namespace FactoryHelper.Entities {
     [CustomEntity("FactoryHelper/BoomBox")]
     public class BoomBox : Solid {
-        public ParticleType P_Steam = ParticleTypes.Steam;
-        public ParticleType P_SteamAngry = new ParticleType(ParticleTypes.Steam) {
-            LifeMin = 1f,
-            LifeMax = 2f,
-            SpeedMin = 12f,
-            SpeedMax = 24f
-        };
-
-        private class BoomCollider : Entity {
-            public BoomCollider(Vector2 position) : base(position) {
-                Collider = new Circle(40f, 0, 0);
-            }
-        }
-
         private const float _angryResetTime = 2f;
         private const float _angryShootTime = 0.5f;
         private const float _idlePuffTime = 0.5f;
         private const float _activePuffTime = 0.1f;
         private const float _angryPuffTime = 0.02f;
+
+        public ParticleType P_Steam = ParticleTypes.Steam;
+        public ParticleType P_SteamAngry = new(ParticleTypes.Steam) {
+            LifeMin = 1f,
+            LifeMax = 2f,
+            SpeedMin = 12f,
+            SpeedMax = 24f
+        };
 
         private readonly float _initialDelay;
         private readonly Sprite _sprite;
@@ -40,8 +34,6 @@ namespace FactoryHelper.Entities {
         private bool _canGetAngry = false;
         private Coroutine _sequence;
         private bool _steamAnger = false;
-
-        public FactoryActivator Activator { get; }
 
         public BoomBox(EntityData data, Vector2 offest) : this(data.Position + offest, data.Attr("activationId", ""), data.Float("initialDelay", 0f), data.Bool("startActive", false)) {
         }
@@ -79,6 +71,8 @@ namespace FactoryHelper.Entities {
             Add(new LightOcclude(0.2f));
         }
 
+        public FactoryActivator Activator { get; }
+
         private void OnSteamWall(SteamWall obj) {
             _steamAnger = true;
             if (Activator.IsOn) {
@@ -87,6 +81,7 @@ namespace FactoryHelper.Entities {
                 _sprite.Play("angry", true);
                 Explode();
             }
+
             Activator.ForceActivate();
         }
 
@@ -105,6 +100,7 @@ namespace FactoryHelper.Entities {
             if (_sequence != null) {
                 Remove(_sequence);
             }
+
             Add(_sequence = new Coroutine(StartupSequence()));
         }
 
@@ -113,6 +109,7 @@ namespace FactoryHelper.Entities {
             if (_sequence != null) {
                 Remove(_sequence);
             }
+
             Add(_sequence = new Coroutine(WindDownSequence()));
         }
 
@@ -159,6 +156,7 @@ namespace FactoryHelper.Entities {
             if (!_steamAnger && _canGetAngry) {
                 HandleAngryMode();
             }
+
             if (!_canGetAngry && Scene.OnInterval(_idlePuffTime)) {
                 SceneAs<Level>().ParticlesFG.Emit(P_Steam, 1, Center, new Vector2(8f, 8f));
             } else if (_canGetAngry && !_angryMode && Scene.OnInterval(_activePuffTime)) {
@@ -182,6 +180,7 @@ namespace FactoryHelper.Entities {
                     ResetAngryMode();
                 }
             }
+
             HandleAngryModeResetting();
         }
 
@@ -222,7 +221,14 @@ namespace FactoryHelper.Entities {
                     player.ExplodeLaunch(Center, false, false);
                 }
             }
+
             Collidable = true;
+        }
+
+        private class BoomCollider : Entity {
+            public BoomCollider(Vector2 position) : base(position) {
+                Collider = new Circle(40f, 0, 0);
+            }
         }
     }
 }

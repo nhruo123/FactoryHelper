@@ -5,7 +5,7 @@ using Monocle;
 using System.Collections;
 
 namespace FactoryHelper.Cutscenes {
-    class CS01_FactoryHelper_Ending : CutsceneEntity {
+    internal class CS01_FactoryHelper_Ending : CutsceneEntity {
         private readonly Player _player;
         private Coroutine _running;
         private SteamWall _steamWall;
@@ -28,6 +28,7 @@ namespace FactoryHelper.Cutscenes {
                 _steamWall.Speed -= Engine.DeltaTime * 2f;
                 yield return null;
             }
+
             Scene.Remove(_steamWall);
         }
 
@@ -71,7 +72,7 @@ namespace FactoryHelper.Cutscenes {
             BadelineDummy badeline;
             Level.Add(badeline = new BadelineDummy(_player.Position - new Vector2(250f, 24f)));
             badeline.FloatSpeed = 20f;
-            yield return badeline.FloatTo(badeline.Position + Vector2.UnitX * 48f);
+            yield return badeline.FloatTo(badeline.Position + (Vector2.UnitX * 48f));
             yield return 1.5f;
             EndCutscene(Level);
         }
@@ -80,6 +81,7 @@ namespace FactoryHelper.Cutscenes {
             while (_player.X < level.Bounds.Left + 500 - 2) {
                 yield return null;
             }
+
             Remove(_running);
             yield return null;
             PlayerJump(1);
@@ -87,12 +89,13 @@ namespace FactoryHelper.Cutscenes {
             while (!_player.OnGround()) {
                 yield return null;
             }
+
             _player.DummyFriction = true;
             yield return null;
         }
 
         private void PlayerJump(int direction) {
-            _player.Facing = (Facings) direction;
+            _player.Facing = (Facings)direction;
             _player.DummyFriction = false;
             _player.DummyAutoAnimate = true;
             _player.Speed.X = direction * 120;

@@ -8,38 +8,10 @@ using System;
 namespace FactoryHelper.Entities {
     [CustomEntity("FactoryHelper/ThrowBox")]
     public class ThrowBox : Actor {
-        public Vector2 Speed;
-        public Holdable Hold;
-        public ConveyorMover ConveyorMover;
-        public Action OnRemoved;
-        public bool IsSpecial;
-
         private const float HORIZONTAL_BREAK_SPEED = 180f;
         private const float VERTICAL_BREAK_SPEED = 300f;
         private const float CONVEYOR_ACCELERATION = 200f;
         private const float SOUND_RELOAD_TIME = 0.2f;
-        private static readonly Vector2 DISPLACEMENT = new Vector2(-8f, -16f);
-
-        private Image _image;
-        private Image _warningImage;
-        private float _noGravityTimer;
-        private Vector2 _prevLiftSpeed;
-        private Level _level;
-        private bool _shattered;
-        private bool _isMetal;
-        private float _soundTimerX = 0f;
-        private float _soundTimerY = 0f;
-        private string _levelName;
-        private bool _pickedUp;
-        private Player _player;
-        private ParticleEmitter _shimmerParticles;
-        private Vector2 _starterPosition;
-        private bool _unspecializeOnRemove = true;
-        private bool _tutorial;
-        private BirdTutorialGui _tutorialCarry;
-        private BirdTutorialGui _tutorialPutDown;
-        private bool _isCrucial;
-        private TransitionListener _transitionListener;
 
         public static ParticleType P_Impact { get; } = new ParticleType {
             Color = Calc.HexToColor("9c8d7b"),
@@ -52,6 +24,36 @@ namespace FactoryHelper.Entities {
             LifeMin = 0.3f,
             LifeMax = 0.8f
         };
+
+        public Vector2 Speed;
+        public Holdable Hold;
+        public ConveyorMover ConveyorMover;
+        public Action OnRemoved;
+        public bool IsSpecial;
+
+        private static readonly Vector2 DISPLACEMENT = new(-8f, -16f);
+
+        private readonly Image _image;
+        private readonly Image _warningImage;
+        private readonly bool _isMetal;
+        private readonly string _levelName;
+        private readonly bool _tutorial;
+        private readonly TransitionListener _transitionListener;
+
+        private Vector2 _prevLiftSpeed;
+        private Level _level;
+        private bool _shattered;
+        private float _soundTimerX = 0f;
+        private float _soundTimerY = 0f;
+        private float _noGravityTimer;
+        private bool _pickedUp;
+        private Player _player;
+        private ParticleEmitter _shimmerParticles;
+        private Vector2 _starterPosition;
+        private bool _unspecializeOnRemove = true;
+        private BirdTutorialGui _tutorialCarry;
+        private BirdTutorialGui _tutorialPutDown;
+        private bool _isCrucial;
 
         public ThrowBox(EntityData data, Vector2 offset) : this(data.Position + offset, data.Bool("isMetal", false), data.Bool("tutorial", false), data.Bool("isSpecial", false), data.Bool("isCrucial", false)) {
             _levelName = data.Level.Name;
@@ -84,7 +86,7 @@ namespace FactoryHelper.Entities {
             Hold.OnRelease = OnRelease;
             Hold.OnHitSpring = HitSpring;
             Hold.OnHitSpinner = OnHitSpinner;
-            Hold.SpeedGetter = (() => Speed);
+            Hold.SpeedGetter = () => Speed;
 
             Add(_transitionListener = new TransitionListener());
             _transitionListener.OnOutBegin = () => _isCrucial = false;
@@ -118,16 +120,18 @@ namespace FactoryHelper.Entities {
             if (_soundTimerX > 0f) {
                 _soundTimerX -= Engine.DeltaTime;
             }
+
             if (_soundTimerY > 0f) {
                 _soundTimerY -= Engine.DeltaTime;
             }
+
             if (Hold.IsHeld) {
                 _prevLiftSpeed = Vector2.Zero;
             } else if (!ConveyorMover.IsOnConveyor) {
                 if (OnGround()) {
-                    float target = (!OnGround(Position + Vector2.UnitX * 3f)) ? 20f : (OnGround(Position - Vector2.UnitX * 3f) ? 0f : (-20f));
+                    float target = (!OnGround(Position + (Vector2.UnitX * 3f))) ? 20f : (OnGround(Position - (Vector2.UnitX * 3f)) ? 0f : (-20f));
                     Speed.X = Calc.Approach(Speed.X, target, 800f * Engine.DeltaTime);
-                    Vector2 liftSpeed = base.LiftSpeed;
+                    Vector2 liftSpeed = LiftSpeed;
                     if (liftSpeed == Vector2.Zero && _prevLiftSpeed != Vector2.Zero) {
                         Speed = _prevLiftSpeed;
                         _prevLiftSpeed = Vector2.Zero;
@@ -135,6 +139,7 @@ namespace FactoryHelper.Entities {
                         if (Speed.X != 0f && Speed.Y == 0f) {
                             Speed.Y = -60f;
                         }
+
                         if (Speed.Y < 0f) {
                             _noGravityTimer = 0.15f;
                         }
@@ -149,10 +154,12 @@ namespace FactoryHelper.Entities {
                     if (Math.Abs(Speed.Y) <= 30f) {
                         accY *= 0.5f;
                     }
+
                     float accX = 350f;
                     if (Speed.Y < 0f) {
                         accX *= 0.5f;
                     }
+
                     Speed.X = Calc.Approach(Speed.X, 0f, accX * Engine.DeltaTime);
                     if (_noGravityTimer > 0f) {
                         _noGravityTimer -= Engine.DeltaTime;
@@ -160,6 +167,7 @@ namespace FactoryHelper.Entities {
                         Speed.Y = Calc.Approach(Speed.Y, 300f, accY * Engine.DeltaTime);
                     }
                 }
+
                 MoveH(Speed.X * Engine.DeltaTime, OnCollideH);
                 MoveV(Speed.Y * Engine.DeltaTime, OnCollideV);
                 if (IsSpecial) {
@@ -176,19 +184,24 @@ namespace FactoryHelper.Entities {
                         Shatter();
                     }
                 }
+
                 if (_isCrucial && Bottom > _level.Bounds.Bottom + 4) {
                     Shatter();
                 }
+
                 if (Left > _level.Bounds.Right + 8 || Right < _level.Bounds.Left - 8 || Top > _level.Bounds.Bottom + 8 || Bottom < _level.Bounds.Top - 8) {
                     RemoveSelf();
                 }
             }
+
             if (Collidable) {
                 Hold.CheckAgainstColliders();
             }
+
             if (_tutorial && OnGround(4) && !ConveyorMover.IsOnConveyor && _tutorialCarry == null) {
-                _tutorialCarry = new BirdTutorialGui(this, new Vector2(0f, -24f), Dialog.Clean("tutorial_carry"), Dialog.Clean("tutorial_hold"), Input.Grab);
-                _tutorialCarry.Open = true;
+                _tutorialCarry = new BirdTutorialGui(this, new Vector2(0f, -24f), Dialog.Clean("tutorial_carry"), Dialog.Clean("tutorial_hold"), Input.Grab) {
+                    Open = true
+                };
                 Scene.Add(_tutorialCarry);
             }
         }
@@ -202,6 +215,7 @@ namespace FactoryHelper.Entities {
             if (IsSpecial && _unspecializeOnRemove) {
                 (FactoryHelperModule.Instance._Session as FactoryHelperSession).SpecialBoxPosition = null;
             }
+
             base.Removed(scene);
         }
 
@@ -217,11 +231,13 @@ namespace FactoryHelper.Entities {
             if (Math.Abs(Speed.Y) <= 30f) {
                 accY *= 0.5f;
             }
+
             if (_noGravityTimer > 0f) {
                 _noGravityTimer -= Engine.DeltaTime;
             } else {
                 Speed.Y = Calc.Approach(Speed.Y, 300f, accY * Engine.DeltaTime);
             }
+
             Speed.X = Calc.Approach(Speed.X, amount, CONVEYOR_ACCELERATION * Engine.DeltaTime);
             MoveH(Speed.X * Engine.DeltaTime, OnCollideH);
             MoveV(Speed.Y * Engine.DeltaTime, OnCollideV);
@@ -241,6 +257,7 @@ namespace FactoryHelper.Entities {
                     _noGravityTimer = 0.3f;
                     return true;
                 }
+
                 if (spring.Orientation == Spring.Orientations.WallLeft && Speed.X <= 0f) {
                     MoveTowardsY(spring.CenterY + 5f, 4f);
                     Speed.X = 220f;
@@ -248,6 +265,7 @@ namespace FactoryHelper.Entities {
                     _noGravityTimer = 0.1f;
                     return true;
                 }
+
                 if (spring.Orientation == Spring.Orientations.WallRight && Speed.X >= 0f) {
                     MoveTowardsY(spring.CenterY + 5f, 4f);
                     Speed.X = -220f;
@@ -256,6 +274,7 @@ namespace FactoryHelper.Entities {
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -263,16 +282,19 @@ namespace FactoryHelper.Entities {
             if ((_player == null || _player.Dead) && FactoryHelperModule.Session.SpecialBoxLevel == SceneAs<Level>().Session.Level) {
                 StopBeingSpecial();
             }
+
             Collidable = true;
             _unspecializeOnRemove = true;
             RemoveTag(Tags.Persistent);
             if (force.X != 0f && force.Y == 0f) {
                 force.Y = -0.4f;
             }
+
             Speed = force * 200f;
             if (Speed != Vector2.Zero) {
                 _noGravityTimer = 0.1f;
             }
+
             if (_tutorialPutDown != null) {
                 _tutorialPutDown.Open = false;
             }
@@ -292,17 +314,21 @@ namespace FactoryHelper.Entities {
                     factorySession.OriginalSession = (Scene as Level).Session;
                     factorySession.SpecialBoxLevel = _levelName;
                 }
+
                 ParticleSystem particlesFG = (Scene as Level).ParticlesFG;
                 Add(_shimmerParticles = new ParticleEmitter(particlesFG, Key.P_Shimmer, Vector2.UnitY * -6, new Vector2(6f, 6f), 1, 0.2f));
                 _shimmerParticles.SimulateCycle();
             }
+
             if (_tutorialCarry != null) {
                 _tutorialCarry.Open = false;
             }
+
             if (_tutorial && _tutorialPutDown == null) {
                 _tutorialPutDown = new BirdTutorialGui(this, new Vector2(0f, -24f), Dialog.Clean("tutorial_drop"), Dialog.Clean("tutorial_hold"), new Vector2(0f, 1f), "+ ", Dialog.Clean("tutorial_release"), Input.Grab);
                 Scene.Add(_tutorialPutDown);
             }
+
             if (_tutorialPutDown != null) {
                 _tutorialPutDown.Open = true;
             }
@@ -313,12 +339,15 @@ namespace FactoryHelper.Entities {
                 PlayHitSound();
                 _soundTimerY = SOUND_RELOAD_TIME;
             }
+
             if (Speed.Y > 160f) {
                 ImpactParticles(data.Direction);
             }
+
             if (data.Hit is DashSwitch) {
                 (data.Hit as DashSwitch).OnDashCollide(null, Vector2.UnitY * Math.Sign(Speed.Y));
             }
+
             if (!_isMetal && Math.Abs(Speed.Y) >= VERTICAL_BREAK_SPEED) {
                 Shatter();
             } else if (CollideCheck<PressurePlate.Button>()) {
@@ -327,7 +356,7 @@ namespace FactoryHelper.Entities {
                 Speed.Y *= -0.25f;
             } else {
                 Speed.Y = 0f;
-                Position.Y = (float) Math.Floor(Position.Y);
+                Position.Y = (float)Math.Floor(Position.Y);
             }
         }
 
@@ -339,12 +368,15 @@ namespace FactoryHelper.Entities {
                     _soundTimerX = SOUND_RELOAD_TIME;
                 }
             }
+
             if (data.Hit is DashSwitch) {
                 (data.Hit as DashSwitch).OnDashCollide(null, Vector2.UnitX * Math.Sign(Speed.X));
             }
+
             if (data.Hit is DashFuseBox) {
                 (data.Hit as DashFuseBox).OnDashed(null, Vector2.UnitX * Math.Sign(Speed.X));
             }
+
             if (!_isMetal && (Math.Abs(Speed.X) >= HORIZONTAL_BREAK_SPEED)) {
                 Shatter();
             } else if (Math.Abs(Speed.X) > 10f) {
@@ -367,7 +399,7 @@ namespace FactoryHelper.Entities {
             Vector2 position;
             Vector2 positionRange;
             if (dir.X > 0f) {
-                direction = (float) Math.PI;
+                direction = (float)Math.PI;
                 position = new Vector2(Right, Center.Y);
                 positionRange = Vector2.UnitY * 6f;
             } else if (dir.X < 0f) {
@@ -375,14 +407,15 @@ namespace FactoryHelper.Entities {
                 position = new Vector2(Left, Center.Y);
                 positionRange = Vector2.UnitY * 6f;
             } else if (dir.Y > 0f) {
-                direction = -(float) Math.PI / 2f;
+                direction = -(float)Math.PI / 2f;
                 position = new Vector2(Center.X, Bottom);
                 positionRange = Vector2.UnitX * 6f;
             } else {
-                direction = (float) Math.PI / 2f;
+                direction = (float)Math.PI / 2f;
                 position = new Vector2(Center.X, Top);
                 positionRange = Vector2.UnitX * 6f;
             }
+
             (Scene as Level).Particles.Emit(P_Impact, 12, position, positionRange, direction);
         }
 
@@ -395,26 +428,30 @@ namespace FactoryHelper.Entities {
                 } else {
                     Audio.Play("event:/game/general/wall_break_wood", Position);
                 }
+
                 for (int i = 0; i < Width / 8f; i++) {
                     for (int j = 0; j < Height / 8f; j++) {
                         if (_isMetal) {
-                            base.Scene.Add(Engine.Pooler.Create<Debris>().Init(Position + new Vector2(4 + i * 8, 4 + j * 8) + DISPLACEMENT, '8', false).BlastFrom(Center));
+                            Scene.Add(Engine.Pooler.Create<Debris>().Init(Position + new Vector2(4 + (i * 8), 4 + (j * 8)) + DISPLACEMENT, '8', false).BlastFrom(Center));
                         } else {
-                            base.Scene.Add(Engine.Pooler.Create<Debris>().Init(Position + new Vector2(4 + i * 8, 4 + j * 8) + DISPLACEMENT, '9', false).BlastFrom(Center));
+                            Scene.Add(Engine.Pooler.Create<Debris>().Init(Position + new Vector2(4 + (i * 8), 4 + (j * 8)) + DISPLACEMENT, '9', false).BlastFrom(Center));
                         }
                     }
                 }
+
                 Player player;
                 player = Scene.Tracker.GetEntity<Player>();
                 if ((IsSpecial && FactoryHelperModule.Session.SpecialBoxPosition != null && FactoryHelperModule.Session.SpecialBoxLevel != SceneAs<Level>().Session.Level) || (_isCrucial && _pickedUp)) {
                     if (player != null) {
                         player.Die(-(Position - player.Position).SafeNormalize());
                     }
+
                     _unspecializeOnRemove = false;
                 } else if (IsSpecial) {
                     StopBeingSpecial();
                     _unspecializeOnRemove = true;
                 }
+
                 RemoveSelf();
             }
         }

@@ -3,7 +3,7 @@ using Monocle;
 using System.Collections;
 
 namespace FactoryHelper.Cutscenes {
-    class CS01_FactoryHelper_Entrance : CutsceneEntity {
+    internal class CS01_FactoryHelper_Entrance : CutsceneEntity {
         private readonly Player _player;
 
         public CS01_FactoryHelper_Entrance(Player player) {

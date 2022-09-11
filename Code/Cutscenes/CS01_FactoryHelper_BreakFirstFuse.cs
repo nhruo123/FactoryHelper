@@ -4,7 +4,7 @@ using Monocle;
 using System.Collections;
 
 namespace FactoryHelper.Cutscenes {
-    class CS01_FactoryHelper_BreakFirstFuse : CutsceneEntity {
+    internal class CS01_FactoryHelper_BreakFirstFuse : CutsceneEntity {
         private readonly Player _player;
 
         public CS01_FactoryHelper_BreakFirstFuse(Player player) {
@@ -20,6 +20,7 @@ namespace FactoryHelper.Cutscenes {
             while (!_player.OnGround()) {
                 yield return null;
             }
+
             yield return 1.0f;
             _player.Facing = Facings.Left;
             yield return 0.5f;
@@ -41,6 +42,7 @@ namespace FactoryHelper.Cutscenes {
             while (_player.Center.X > target + 3f) {
                 yield return null;
             }
+
             Remove(walk);
             yield return null;
             _player.DummyAutoAnimate = false;
@@ -50,7 +52,7 @@ namespace FactoryHelper.Cutscenes {
         private IEnumerator PanCameraY(float to, float speed) {
             float from = Level.Camera.Y;
             for (float p = 0f; p < 1f; p += Engine.DeltaTime * speed) {
-                Level.Camera.Y = from + (to - from) * Ease.CubeInOut(p);
+                Level.Camera.Y = from + ((to - from) * Ease.CubeInOut(p));
                 yield return null;
             }
         }

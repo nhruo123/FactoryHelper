@@ -8,44 +8,32 @@ using System.Collections;
 namespace FactoryHelper.Entities {
     [CustomEntity("FactoryHelper/Battery")]
     public class Battery : Entity {
-        public static ParticleType P_Shimmer = new ParticleType(Key.P_Shimmer) {
+        public static ParticleType P_Shimmer = new(Key.P_Shimmer) {
             Color = Calc.HexToColor("61c200"),
             Color2 = Calc.HexToColor("a1db00")
         };
 
-        public static ParticleType P_Insert = new ParticleType(Key.P_Insert) {
+        public static ParticleType P_Insert = new(Key.P_Insert) {
             Color = Calc.HexToColor("61c200"),
             Color2 = Calc.HexToColor("a1db00")
         };
 
-        public static ParticleType P_Collect = new ParticleType(P_Shimmer);
+        public static ParticleType P_Collect = new(P_Shimmer);
 
         public EntityID ID;
-
         public bool IsUsed;
-
         public bool StartedUsing;
-
         public bool Turning;
 
         private readonly Follower follower;
-
         private readonly Sprite sprite;
-
         private readonly Wiggler wiggler;
-
         private readonly VertexLight light;
-
         private ParticleEmitter shimmerParticles;
-
         private float wobble;
-
         private bool wobbleActive;
-
         private Tween tween;
-
         private Alarm alarm;
-
 
         public Battery(Vector2 position, EntityID id) : base(position) {
             ID = id;
@@ -64,10 +52,12 @@ namespace FactoryHelper.Entities {
                             tween.RemoveSelf();
                             tween = null;
                         }
+
                         if (alarm != null) {
                             alarm.RemoveSelf();
                             alarm = null;
                         }
+
                         Turning = false;
                         Visible = true;
                         sprite.Visible = true;
@@ -81,16 +71,15 @@ namespace FactoryHelper.Entities {
                 }
             });
             Add(wiggler = Wiggler.Create(0.4f, 4f, delegate (float v) {
-                sprite.Scale = Vector2.One * (1f + v * 0.35f);
+                sprite.Scale = Vector2.One * (1f + (v * 0.35f));
             }));
             Add(light = new VertexLight(Color.LightSeaGreen, 1f, 32, 48));
         }
 
-        public Battery(EntityData data, Vector2 offset) : this(data.Position + offset, new EntityID(data.Level.Name, data.ID)) {
-        }
+        public Battery(EntityData data, Vector2 offset) : this(data.Position + offset, new EntityID(data.Level.Name, data.ID)) { }
 
         public Battery(Player player, EntityID id)
-            : this(player.Position + new Vector2(-12 * (int) player.Facing, -8f), id) {
+            : this(player.Position + new Vector2(-12 * (int)player.Facing, -8f), id) {
             player.Leader.GainFollower(follower);
             Collidable = false;
             Depth = -1000000;
@@ -106,8 +95,9 @@ namespace FactoryHelper.Entities {
         public override void Update() {
             if (wobbleActive) {
                 wobble += Engine.DeltaTime * 4f;
-                sprite.Y = (float) Math.Sin(wobble);
+                sprite.Y = (float)Math.Sin(wobble);
             }
+
             base.Update();
         }
 
@@ -115,6 +105,7 @@ namespace FactoryHelper.Entities {
             if (sprite.Visible) {
                 sprite.DrawSimpleOutline();
             }
+
             base.Render();
         }
 
@@ -123,6 +114,7 @@ namespace FactoryHelper.Entities {
             if (follower.Leader != null) {
                 follower.Leader.LoseFollower(follower);
             }
+
             RemoveBattery(ID);
         }
 
@@ -133,11 +125,11 @@ namespace FactoryHelper.Entities {
             wobbleActive = false;
             sprite.Y = 0f;
             Vector2 from = Position;
-            SimpleCurve curve = new SimpleCurve(from, target, (target + from) / 2f + new Vector2(0f, -48f));
+            SimpleCurve curve = new(from, target, ((target + from) / 2f) + new Vector2(0f, -48f));
             tween = Tween.Create(Tween.TweenMode.Oneshot, Ease.CubeOut, 1f, start: true);
             tween.OnUpdate = delegate (Tween t) {
                 Position = curve.GetPoint(t.Eased);
-                sprite.Rate = 1f + t.Eased * 2f;
+                sprite.Rate = 1f + (t.Eased * 2f);
             };
             Add(tween);
             yield return tween.Wait();
@@ -145,11 +137,13 @@ namespace FactoryHelper.Entities {
             while (sprite.CurrentAnimationFrame != 0) {
                 yield return null;
             }
+
             shimmerParticles.Active = false;
             Input.Rumble(RumbleStrength.Medium, RumbleLength.Medium);
             for (int j = 0; j < 16; j++) {
-                SceneAs<Level>().ParticlesFG.Emit(P_Insert, Center, (float) Math.PI / 8f * (float) j);
+                SceneAs<Level>().ParticlesFG.Emit(P_Insert, Center, (float)Math.PI / 8f * j);
             }
+
             sprite.Visible = false;
             light.Visible = false;
             Turning = false;

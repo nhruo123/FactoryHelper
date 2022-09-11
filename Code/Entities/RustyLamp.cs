@@ -11,19 +11,16 @@ namespace FactoryHelper.Entities {
     public class RustyLamp : Entity {
         public static readonly Color Color = Color.Lerp(Color.White, Color.Orange, 0.5f);
 
-        public FactoryActivator Activator { get; }
-
-        private float _initialDelay;
         private readonly Sprite _sprite;
         private readonly VertexLight _light;
         private readonly BloomPoint _bloom;
+        private readonly string _strobePatternString;
+        private float _initialDelay;
         private Coroutine _strobePattern;
-        private string _strobePatternString;
         private bool _startedOn;
-        private SteamCollider _steamCollider;
 
-        public RustyLamp(EntityData data, Vector2 offset) :
-            this(
+        public RustyLamp(EntityData data, Vector2 offset)
+            : this(
                 data.Position,
                 offset,
                 data.Attr("activationId", ""),
@@ -46,7 +43,7 @@ namespace FactoryHelper.Entities {
             Activator.OnStartOff = OnStartOff;
             Activator.OnStartOn = OnStartOn;
 
-            Add(_steamCollider = new SteamCollider(OnSteamWall));
+            Add(new SteamCollider(OnSteamWall));
 
             _initialDelay = initialDelay;
             Add(_sprite = new Sprite(GFX.Game, "objects/FactoryHelper/rustyLamp/rustyLamp"));
@@ -61,6 +58,8 @@ namespace FactoryHelper.Entities {
             _light.Position = new Vector2(8, 8);
             _bloom.Position = new Vector2(8, 8);
         }
+
+        public FactoryActivator Activator { get; }
 
         public override void Update() {
             base.Update();
@@ -106,6 +105,7 @@ namespace FactoryHelper.Entities {
             if (_strobePattern != null) {
                 Remove(_strobePattern);
             }
+
             switch (strobePattern) {
                 default:
                 case "None":
@@ -153,6 +153,7 @@ namespace FactoryHelper.Entities {
                     yield return FlickerOn();
                     firstRun = false;
                 }
+
                 yield return Calc.Random.NextFloat(10f) + 2f;
                 int flickerCount = Calc.Random.Next(3, 7);
                 float flickerLength = Calc.Random.NextFloat(0.02f) + 0.01f;
@@ -174,6 +175,7 @@ namespace FactoryHelper.Entities {
                     yield return FlickerOn();
                     firstRun = false;
                 }
+
                 yield return Calc.Random.NextFloat(5f) + 10f;
                 SetLightLevel(0.5f);
                 yield return 0.2f;
@@ -202,11 +204,12 @@ namespace FactoryHelper.Entities {
             int flickerCount = Calc.Random.Next(3, 7);
             float flickerLength = Calc.Random.NextFloat(0.02f) + 0.01f;
             for (int i = 0; i < flickerCount; i++) {
-                SetLightLevel(0.5f * (1 - (i + 1) / flickerCount));
+                SetLightLevel(0.5f * (1 - ((i + 1) / flickerCount)));
                 yield return flickerLength;
-                SetLightLevel(1.0f * (1 - (i + 1) / flickerCount));
+                SetLightLevel(1.0f * (1 - ((i + 1) / flickerCount)));
                 yield return flickerLength;
             }
+
             TurnOff();
         }
 

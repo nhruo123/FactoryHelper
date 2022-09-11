@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 namespace FactoryHelper.Triggers {
     [CustomEntity("FactoryHelper/SteamWallSpeedTrigger")]
     public class SteamWallSpeedTrigger : Trigger {
-        private float speed = 1f;
+        private readonly float speed = 1f;
         public SteamWallSpeedTrigger(EntityData data, Vector2 offset) : base(data, offset) {
             speed = data.Float("speed", defaultValue: 1f);
         }
@@ -19,9 +19,6 @@ namespace FactoryHelper.Triggers {
                 steamWall.Speed = 22f * speed;
                 //sorry for the magic number it makes my life easier :p
             }
-
-
         }
     }
-
 }
