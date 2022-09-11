@@ -12,7 +12,8 @@ namespace FactoryHelper.Triggers {
 
         private Color overrideColor = Color.White;
 
-        public SteamWallColorTrigger(EntityData data, Vector2 offset) : base(data, offset) {
+        public SteamWallColorTrigger(EntityData data, Vector2 offset) 
+            : base(data, offset) {
             overrideColor = Calc.HexToColor(data.Attr("color", defaultValue: "ffffff"));
             duration = Math.Abs(data.Float("duration", defaultValue: 1f));
         }

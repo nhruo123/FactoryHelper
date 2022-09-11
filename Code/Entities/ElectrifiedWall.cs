@@ -45,10 +45,6 @@ namespace FactoryHelper.Entities {
         private uint _edgeSeed;
         private float _particleEmittionPeriod;
 
-        public ElectrifiedWall(EntityData data, Vector2 offset, Directions dir)
-            : this(data.Position + offset, GetSize(data, dir), dir, data.Attr("activationId", ""), data.Bool("startActive", true)) {
-        }
-
         public ElectrifiedWall(Vector2 position, int size, Directions direction, string activationId, bool startActive)
             : base(position, size, direction) {
             Depth = 10;
@@ -95,24 +91,24 @@ namespace FactoryHelper.Entities {
             }
         }
 
+        public ElectrifiedWall(EntityData data, Vector2 offset, Directions dir)
+            : this(data.Position + offset, GetSize(data, dir), dir, data.Attr("activationId", ""), data.Bool("startActive", true)) {
+        }
+
         public FactoryActivator Activator { get; }
         public float Fade { get; private set; } = 0f;
 
-        public static Entity LoadUp(Level level, LevelData levelData, Vector2 offset, EntityData data) {
-            return new ElectrifiedWall(data, offset, Directions.Up);
-        }
+        public static Entity LoadUp(Level level, LevelData levelData, Vector2 offset, EntityData data)
+            => new ElectrifiedWall(data, offset, Directions.Up);
 
-        public static Entity LoadDown(Level level, LevelData levelData, Vector2 offset, EntityData data) {
-            return new ElectrifiedWall(data, offset, Directions.Down);
-        }
+        public static Entity LoadDown(Level level, LevelData levelData, Vector2 offset, EntityData data)
+            => new ElectrifiedWall(data, offset, Directions.Down);
 
-        public static Entity LoadLeft(Level level, LevelData levelData, Vector2 offset, EntityData data) {
-            return new ElectrifiedWall(data, offset, Directions.Left);
-        }
+        public static Entity LoadLeft(Level level, LevelData levelData, Vector2 offset, EntityData data)
+            => new ElectrifiedWall(data, offset, Directions.Left);
 
-        public static Entity LoadRight(Level level, LevelData levelData, Vector2 offset, EntityData data) {
-            return new ElectrifiedWall(data, offset, Directions.Right);
-        }
+        public static Entity LoadRight(Level level, LevelData levelData, Vector2 offset, EntityData data)
+            => new ElectrifiedWall(data, offset, Directions.Right);
 
         private void OnSteamWall(SteamWall obj) {
             Activator.ForceDeactivate();

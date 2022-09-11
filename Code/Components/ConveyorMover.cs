@@ -9,7 +9,8 @@ namespace FactoryHelper.Components {
         public Action<float> OnMove;
         public bool IsOnConveyor = false;
 
-        public ConveyorMover() : base(true, true) {
+        public ConveyorMover() 
+            : base(true, true) {
         }
 
         public void Move(float amount) {

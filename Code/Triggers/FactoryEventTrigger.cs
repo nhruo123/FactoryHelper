@@ -10,7 +10,8 @@ namespace FactoryHelper.Triggers {
     public class FactoryEventTrigger : Trigger {
         private readonly string _eventName;
 
-        public FactoryEventTrigger(EntityData data, Vector2 offset) : base(data, offset) {
+        public FactoryEventTrigger(EntityData data, Vector2 offset) 
+            : base(data, offset) {
             _eventName = data.Attr("event");
         }
 

@@ -13,9 +13,8 @@ namespace FactoryHelper.Entities {
         private bool _currentButtonState = false;
         private bool _previousButtonState = false;
 
-        public PressurePlate(EntityData data, Vector2 offset) : this(data.Position + offset, data.Attr("activationIds")) { }
-
-        public PressurePlate(Vector2 position, string activationIds) : base(position, 16, 6, false) {
+        public PressurePlate(Vector2 position, string activationIds) 
+            : base(position, 16, 6, false) {
             string[] activationIdArray = activationIds.Split(',');
             Collider.Position.Y += 10;
 
@@ -30,6 +29,10 @@ namespace FactoryHelper.Entities {
             _button = new Button(position);
             Depth = 8020;
             _button.Depth = Depth + 1;
+        }
+
+        public PressurePlate(EntityData data, Vector2 offset)
+            : this(data.Position + offset, data.Attr("activationIds")) {
         }
 
         public Image CaseImage { get; private set; }

@@ -19,17 +19,7 @@ namespace FactoryHelper.Entities {
         private Coroutine _strobePattern;
         private bool _startedOn;
 
-        public RustyLamp(EntityData data, Vector2 offset)
-            : this(
-                data.Position,
-                offset,
-                data.Attr("activationId", ""),
-                data.Float("initialDelay", 0f),
-                data.Attr("strobePattern", "None"),
-                data.Bool("startActive", false)) {
-        }
-
-        public RustyLamp(Vector2 position, Vector2 offset, string activationId, float initialDelay, string strobePattern, bool startActive) : base() {
+        public RustyLamp(Vector2 position, Vector2 offset, string activationId, float initialDelay, string strobePattern, bool startActive) {
             Depth = 8500;
             Position = position + offset;
 
@@ -57,6 +47,11 @@ namespace FactoryHelper.Entities {
             Add(_bloom = new BloomPoint(0.0f, 16f));
             _light.Position = new Vector2(8, 8);
             _bloom.Position = new Vector2(8, 8);
+        }
+
+        public RustyLamp(EntityData data, Vector2 offset)
+            : this(data.Position, offset, data.Attr("activationId", ""), data.Float("initialDelay", 0f), 
+                   data.Attr("strobePattern", "None"), data.Bool("startActive", false)) {
         }
 
         public FactoryActivator Activator { get; }

@@ -8,13 +8,15 @@ namespace FactoryHelper.Components {
         public Action<SteamWall> OnCollide;
         public Collider Collider;
         public bool OneShot;
-        public bool ShouldDoChecks { get; private set; } = true;
 
-        public SteamCollider(Action<SteamWall> onCollide, bool oneShot = true) : base(false, false) {
+        public SteamCollider(Action<SteamWall> onCollide, bool oneShot = true) 
+            : base(false, false) {
             OnCollide = onCollide;
             Collider = null;
             OneShot = oneShot;
         }
+
+        public bool ShouldDoChecks { get; private set; } = true;
 
         public void Check(SteamWall steamWall) {
             if (OnCollide != null) {

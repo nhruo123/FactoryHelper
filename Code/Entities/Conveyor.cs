@@ -50,16 +50,8 @@ namespace FactoryHelper.Entities {
         private readonly SoundSource _sfx;
         private Sprite[] _midSprites;
 
-        public Conveyor(EntityData data, Vector2 offset)
-            : this(
-                data.Position + offset,
-                data.Width,
-                data.Bool("startLeft", true),
-                data.Attr("activationId", "")
-            ) {
-        }
-
-        public Conveyor(Vector2 position, float width, bool startLeft, string activationId) : base(position, width, 16, false) {
+        public Conveyor(Vector2 position, float width, bool startLeft, string activationId) 
+            : base(position, width, 16, false) {
             Add(Activator = new FactoryActivator());
             Activator.StartOn = startLeft;
             Activator.ActivationId = activationId;
@@ -83,6 +75,10 @@ namespace FactoryHelper.Entities {
 
             Add(new LightOcclude(0.2f));
             Add(_sfx = new SoundSource() { Position = new Vector2(Width / 2, Height / 2) });
+        }
+
+        public Conveyor(EntityData data, Vector2 offset)
+            : this(data.Position + offset, data.Width, data.Bool("startLeft", true), data.Attr("activationId", "")) {
         }
 
         public FactoryActivator Activator { get; }

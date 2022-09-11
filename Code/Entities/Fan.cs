@@ -17,10 +17,8 @@ namespace FactoryHelper.Entities {
         private float _percent;
         private bool _speedingUp;
 
-        public Fan(EntityData data, Vector2 offset, Directions direction) : this(data.Position + offset, data.Width, data.Height, direction, data.Attr("activationId"), data.Bool("startActive", false)) {
-        }
-
-        public Fan(Vector2 position, float width, float height, Directions direction, string activationId, bool startActive) : base(position, width, height, false) {
+        public Fan(Vector2 position, float width, float height, Directions direction, string activationId, bool startActive) 
+            : base(position, width, height, false) {
             Add(Activator = new FactoryActivator());
             Activator.ActivationId = activationId != string.Empty ? activationId : null;
             Activator.StartOn = startActive;
@@ -88,18 +86,20 @@ namespace FactoryHelper.Entities {
             Add(new LightOcclude(0.5f));
         }
 
+        public Fan(EntityData data, Vector2 offset, Directions direction)
+            : this(data.Position + offset, data.Width, data.Height, direction, data.Attr("activationId"), data.Bool("startActive", false)) {
+        }
+
         public enum Directions {
             Horizontal,
             Vertical
         }
 
-        public static Entity LoadHorizontal(Level level, LevelData levelData, Vector2 offset, EntityData data) {
-            return new Fan(data, offset, Directions.Horizontal);
-        }
+        public static Entity LoadHorizontal(Level level, LevelData levelData, Vector2 offset, EntityData data)
+            => new Fan(data, offset, Directions.Horizontal);
 
-        public static Entity LoadVertical(Level level, LevelData levelData, Vector2 offset, EntityData data) {
-            return new Fan(data, offset, Directions.Vertical);
-        }
+        public static Entity LoadVertical(Level level, LevelData levelData, Vector2 offset, EntityData data)
+            => new Fan(data, offset, Directions.Vertical);
 
         private void OnSteamWall(SteamWall obj) {
             Activator.ForceDeactivate();

@@ -16,7 +16,7 @@ namespace FactoryHelper.Cutscenes {
         }
 
         private IEnumerator Cutscene(Level level) {
-            _player.StateMachine.State = 11;
+            _player.StateMachine.State = Player.StDummy;
             while (!_player.OnGround()) {
                 yield return null;
             }
@@ -47,7 +47,7 @@ namespace FactoryHelper.Cutscenes {
 
         public override void OnEnd(Level level) {
             Level.Camera.Position = _player.CameraTarget;
-            _player.StateMachine.State = 0;
+            _player.StateMachine.State = Player.StNormal;
         }
     }
 }

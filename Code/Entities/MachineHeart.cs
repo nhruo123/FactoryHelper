@@ -15,12 +15,15 @@ namespace FactoryHelper.Entities {
         private VertexLight _light;
         private BloomPoint _bloom;
 
-        public MachineHeart(EntityData data, Vector2 offset) : this(data.Position + offset) { }
-
-        public MachineHeart(Vector2 position) : base(position, 24, 32, true) {
+        public MachineHeart(Vector2 position) 
+            : base(position, 24, 32, true) {
             Add(_backSprite = FactoryHelperModule.SpriteBank.Create("machineHeart_back"));
             Collider.Position -= new Vector2(12, 16);
             DisableLightsInside = false;
+        }
+
+        public MachineHeart(EntityData data, Vector2 offset)
+            : this(data.Position + offset) {
         }
 
         public override void Added(Scene scene) {

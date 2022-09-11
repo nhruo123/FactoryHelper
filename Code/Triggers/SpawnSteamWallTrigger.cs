@@ -11,7 +11,8 @@ namespace FactoryHelper.Triggers {
         private bool _spawned = false;
         private Color overrideColor = new(1f, 1f, 1f);
 
-        public SpawnSteamWallTrigger(EntityData data, Vector2 offset) : base(data, offset) {
+        public SpawnSteamWallTrigger(EntityData data, Vector2 offset) 
+            : base(data, offset) {
             speed = data.Float("speed", defaultValue: 1f);
             overrideColor = Calc.HexToColor(data.Attr("color", defaultValue: "ffffff"));
         }

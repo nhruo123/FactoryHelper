@@ -36,7 +36,8 @@ namespace FactoryHelper.Entities {
         private EntityID _id;
         private Vector2 _pressDirection;
 
-        public DashFuseBox(EntityData data, Vector2 offset) : base(data.Position + offset, 4f, 16f, false) {
+        public DashFuseBox(EntityData data, Vector2 offset) 
+            : base(data.Position + offset, 4f, 16f, false) {
             string[] activationIds = data.Attr("activationIds", "").Split(',');
 
             _startCutscene = data.Bool("startCutscene", false);

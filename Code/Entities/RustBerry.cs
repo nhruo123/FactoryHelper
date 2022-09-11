@@ -73,7 +73,7 @@ namespace FactoryHelper.Entities {
                 if (Follower.Leader != null && Follower.DelayTimer <= 0f) {
                     bool canCollect = false;
                     if (Follower.Leader.Entity is Player player && player.Scene != null && !player.StrawberriesBlocked) {
-                        if (player.OnSafeGround && player.StateMachine.State != 13) {
+                        if (player.OnSafeGround && player.StateMachine.State != Player.StIntroJump) {
                             canCollect = true;
                         }
                     }

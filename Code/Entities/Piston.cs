@@ -53,19 +53,6 @@ namespace FactoryHelper.Entities {
         private Vector2 _endPos;
         private Vector2 _basePos;
 
-        public Piston(EntityData data, Vector2 offset, Directions direction)
-            : this(data.Position + offset,
-                   data.Nodes[0] + offset,
-                   data.Nodes[1] + offset,
-                   direction,
-                   data.Attr("activationId", ""),
-                   data.Float("moveTime", 0.4f),
-                   data.Float("pauseTime", 0.2f),
-                   data.Float("initialDelay", 0f),
-                   data.Bool("startActive", true),
-                   data.Bool("heated", false)) {
-        }
-
         public Piston(Vector2 position, Vector2 start, Vector2 end, Directions direction, string activationId, float moveTime, float pauseTime, float initialDelay, bool startActive, bool heated) {
             Heated = heated;
             MoveTime = moveTime;
@@ -158,6 +145,11 @@ namespace FactoryHelper.Entities {
             _body.Add(new SteamCollider(OnSteamWall));
         }
 
+        public Piston(EntityData data, Vector2 offset, Directions direction)
+            : this(data.Position + offset, data.Nodes[0] + offset, data.Nodes[1] + offset, direction, data.Attr("activationId", ""), data.Float("moveTime", 0.4f), 
+                   data.Float("pauseTime", 0.2f), data.Float("initialDelay", 0f), data.Bool("startActive", true), data.Bool("heated", false)) {
+        }
+
         public FactoryActivator Activator { get; }
         public float MoveTime { get; } = 0.2f;
         public float PauseTime { get; } = 0.4f;
@@ -191,21 +183,17 @@ namespace FactoryHelper.Entities {
             _ => 0,
         };
 
-        public static Entity LoadUp(Level level, LevelData levelData, Vector2 offset, EntityData data) {
-            return new Piston(data, offset, Directions.Up);
-        }
+        public static Entity LoadUp(Level level, LevelData levelData, Vector2 offset, EntityData data)
+            => new Piston(data, offset, Directions.Up);
 
-        public static Entity LoadDown(Level level, LevelData levelData, Vector2 offset, EntityData data) {
-            return new Piston(data, offset, Directions.Down);
-        }
+        public static Entity LoadDown(Level level, LevelData levelData, Vector2 offset, EntityData data)
+            => new Piston(data, offset, Directions.Down);
 
-        public static Entity LoadLeft(Level level, LevelData levelData, Vector2 offset, EntityData data) {
-            return new Piston(data, offset, Directions.Left);
-        }
+        public static Entity LoadLeft(Level level, LevelData levelData, Vector2 offset, EntityData data)
+            => new Piston(data, offset, Directions.Left);
 
-        public static Entity LoadRight(Level level, LevelData levelData, Vector2 offset, EntityData data) {
-            return new Piston(data, offset, Directions.Right);
-        }
+        public static Entity LoadRight(Level level, LevelData levelData, Vector2 offset, EntityData data)
+            => new Piston(data, offset, Directions.Right);
 
         private void OnSteamWall(SteamWall obj) {
             Activator.ForceDeactivate();

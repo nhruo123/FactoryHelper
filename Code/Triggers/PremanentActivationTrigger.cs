@@ -12,7 +12,8 @@ namespace FactoryHelper.Triggers {
         private readonly HashSet<string> _shouldStayPermanent = new();
         private Level _level;
 
-        public PremanentActivationTrigger(EntityData data, Vector2 offset) : base(data, offset) {
+        public PremanentActivationTrigger(EntityData data, Vector2 offset) 
+            : base(data, offset) {
             string[] _activationIds = data.Attr("activationIds").Split(',');
             _activators = new FactoryActivator[_activationIds.Length];
             for (int i = 0; i < _activationIds.Length; i++) {

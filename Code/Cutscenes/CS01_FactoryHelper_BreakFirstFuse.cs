@@ -16,7 +16,7 @@ namespace FactoryHelper.Cutscenes {
         }
 
         private IEnumerator Cutscene(Level level) {
-            _player.StateMachine.State = 11;
+            _player.StateMachine.State = Player.StDummy;
             while (!_player.OnGround()) {
                 yield return null;
             }
@@ -37,7 +37,7 @@ namespace FactoryHelper.Cutscenes {
         private IEnumerator WaklLeftLookUp() {
             float target = _player.X - 64f;
             Coroutine walk;
-            _player.StateMachine.State = 0;
+            _player.StateMachine.State = Player.StNormal;
             Add(walk = new Coroutine(_player.DummyWalkTo(target, speedMultiplier: 1.2f)));
             while (_player.Center.X > target + 3f) {
                 yield return null;
@@ -58,7 +58,7 @@ namespace FactoryHelper.Cutscenes {
         }
 
         public override void OnEnd(Level level) {
-            _player.StateMachine.State = 0;
+            _player.StateMachine.State = Player.StNormmal;
             _player.DummyAutoAnimate = true;
             _player.Speed = Vector2.Zero;
             _player.Facing = Facings.Left;

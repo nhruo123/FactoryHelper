@@ -55,11 +55,8 @@ namespace FactoryHelper.Entities {
         private BirdTutorialGui _tutorialPutDown;
         private bool _isCrucial;
 
-        public ThrowBox(EntityData data, Vector2 offset) : this(data.Position + offset, data.Bool("isMetal", false), data.Bool("tutorial", false), data.Bool("isSpecial", false), data.Bool("isCrucial", false)) {
-            _levelName = data.Level.Name;
-        }
-
-        public ThrowBox(Vector2 position, bool isMetal, bool tutorial = false, bool isSpecial = false, bool isCrucial = false) : base(position) {
+        public ThrowBox(Vector2 position, bool isMetal, bool tutorial = false, bool isSpecial = false, bool isCrucial = false) 
+            : base(position) {
             Position -= DISPLACEMENT;
             _starterPosition = Position;
             Depth = 100;
@@ -100,6 +97,11 @@ namespace FactoryHelper.Entities {
 
             Add(new LightOcclude(0.2f));
             Add(new MirrorReflection());
+        }
+
+        public ThrowBox(EntityData data, Vector2 offset)
+            : this(data.Position + offset, data.Bool("isMetal", false), data.Bool("tutorial", false), data.Bool("isSpecial", false), data.Bool("isCrucial", false)) {
+            _levelName = data.Level.Name;
         }
 
         private void OnSteamWall(SteamWall steamWall) {

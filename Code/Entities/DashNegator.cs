@@ -31,11 +31,8 @@ namespace FactoryHelper.Entities {
         private readonly Solid[] _turretSolids;
         private readonly float _particleSpanPeriod;
 
-        public DashNegator(EntityData data, Vector2 offset)
-            : this(data.Position + offset, data.Width, data.Height, data.Attr("activationId"), data.Bool("startActive")) {
-        }
-
-        public DashNegator(Vector2 position, int width, int height, string activationId, bool startActive) : base(position) {
+        public DashNegator(Vector2 position, int width, int height, string activationId, bool startActive) 
+            : base(position) {
             Add(Activator = new FactoryActivator());
             Activator.ActivationId = activationId == string.Empty ? null : activationId;
             Activator.StartOn = startActive;
@@ -74,6 +71,10 @@ namespace FactoryHelper.Entities {
             }
 
             _particleSpanPeriod = 256f / (width * height);
+        }
+
+        public DashNegator(EntityData data, Vector2 offset)
+            : this(data.Position + offset, data.Width, data.Height, data.Attr("activationId"), data.Bool("startActive")) {
         }
 
         private void OnSteamWall(SteamWall obj) {

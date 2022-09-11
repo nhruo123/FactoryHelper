@@ -35,10 +35,8 @@ namespace FactoryHelper.Entities {
         private Coroutine _sequence;
         private bool _steamAnger = false;
 
-        public BoomBox(EntityData data, Vector2 offest) : this(data.Position + offest, data.Attr("activationId", ""), data.Float("initialDelay", 0f), data.Bool("startActive", false)) {
-        }
-
-        public BoomBox(Vector2 position, string activationId, float initialDelay, bool startActive) : base(position, 24, 24, false) {
+        public BoomBox(Vector2 position, string activationId, float initialDelay, bool startActive) 
+            : base(position, 24, 24, false) {
             Add(Activator = new FactoryActivator());
             Activator.StartOn = startActive;
             Activator.ActivationId = activationId == string.Empty ? null : activationId;
@@ -69,6 +67,10 @@ namespace FactoryHelper.Entities {
             Add(_sfx = new SoundSource());
             _sfx.Position = new Vector2(Width / 2, Height / 2);
             Add(new LightOcclude(0.2f));
+        }
+
+        public BoomBox(EntityData data, Vector2 offest)
+            : this(data.Position + offest, data.Attr("activationId", ""), data.Float("initialDelay", 0f), data.Bool("startActive", false)) {
         }
 
         public FactoryActivator Activator { get; }

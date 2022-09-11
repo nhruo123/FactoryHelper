@@ -20,10 +20,6 @@ namespace FactoryHelper.Entities {
         private readonly bool _fromTop;
         private readonly bool _tutorial;
 
-        public ThrowBoxSpawner(EntityData data, Vector2 offset)
-            : this(data.Position + offset, data.Float("delay", 5f), data.Int("maximum", 0), data.Attr("activationId"), data.Bool("isMetal", false), data.Bool("isRandom", false), data.Bool("fromTop", true), data.Bool("tutorial", false), data.Bool("startActive", true)) {
-        }
-
         public ThrowBoxSpawner(Vector2 position, float delay, int maximum, string activationId, bool isMetal, bool isRandom, bool fromTop, bool tutorial, bool startActive) : base(position) {
             Add(Activator = new FactoryActivator());
             Activator.ActivationId = activationId == string.Empty ? null : activationId;
@@ -38,8 +34,12 @@ namespace FactoryHelper.Entities {
             _fromTop = fromTop;
             _tutorial = tutorial;
             Add(new Coroutine(SpawnSequence()));
-
             Add(new SteamCollider(OnSteamWall));
+        }
+
+        public ThrowBoxSpawner(EntityData data, Vector2 offset)
+            : this(data.Position + offset, data.Float("delay", 5f), data.Int("maximum", 0), data.Attr("activationId"), data.Bool("isMetal", false),
+                   data.Bool("isRandom", false), data.Bool("fromTop", true), data.Bool("tutorial", false), data.Bool("startActive", true)) {
         }
 
         private void OnSteamWall(SteamWall steamWall) {

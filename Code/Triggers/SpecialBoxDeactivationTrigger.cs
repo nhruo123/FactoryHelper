@@ -7,7 +7,8 @@ using Monocle;
 namespace FactoryHelper.Triggers {
     [CustomEntity("FactoryHelper/SpecialBoxDeactivationTrigger")]
     public class SpecialBoxDeactivationTrigger : Trigger {
-        public SpecialBoxDeactivationTrigger(EntityData data, Vector2 offset) : base(data, offset) {
+        public SpecialBoxDeactivationTrigger(EntityData data, Vector2 offset) 
+            : base(data, offset) {
             Add(new HoldableCollider(OnCollide));
         }
 

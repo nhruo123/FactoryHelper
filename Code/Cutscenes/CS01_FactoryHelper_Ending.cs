@@ -33,7 +33,7 @@ namespace FactoryHelper.Cutscenes {
         }
 
         private IEnumerator Cutscene(Level level) {
-            _player.StateMachine.State = 11;
+            _player.StateMachine.State = Player.StDummy;
             _player.StateMachine.Locked = true;
             _player.Drop();
             yield return null;
@@ -41,7 +41,7 @@ namespace FactoryHelper.Cutscenes {
             yield return null;
             _player.DummyAutoAnimate = false;
             yield return AwaitStop(level);
-            _player.StateMachine.State = 11;
+            _player.StateMachine.State = Player.StDummy;
             _player.DummyAutoAnimate = false;
             _player.Sprite.Rate = 1.2f;
             _player.Sprite.Play("sitDown");

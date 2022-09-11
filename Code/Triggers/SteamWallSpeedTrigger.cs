@@ -7,7 +7,8 @@ namespace FactoryHelper.Triggers {
     [CustomEntity("FactoryHelper/SteamWallSpeedTrigger")]
     public class SteamWallSpeedTrigger : Trigger {
         private readonly float speed = 1f;
-        public SteamWallSpeedTrigger(EntityData data, Vector2 offset) : base(data, offset) {
+        public SteamWallSpeedTrigger(EntityData data, Vector2 offset) 
+            : base(data, offset) {
             speed = data.Float("speed", defaultValue: 1f);
         }
 

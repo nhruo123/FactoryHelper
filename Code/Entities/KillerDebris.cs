@@ -13,14 +13,16 @@ namespace FactoryHelper.Entities {
 
         public static ParticleType P_Move;
 
+        public bool AttachToSolid;
+
         private static readonly Dictionary<DebrisColor, string> fgTextureLookup = new() {
-            {
-                DebrisColor.Silver,
-                "danger/FactoryHelper/debris/fg_silver"
+            { 
+                DebrisColor.Silver, 
+                "danger/FactoryHelper/debris/fg_silver" 
             },
-            {
-                DebrisColor.Bronze,
-                "danger/FactoryHelper/debris/fg_bronze"
+            { 
+                DebrisColor.Bronze, 
+                "danger/FactoryHelper/debris/fg_bronze" 
             }
         };
         private static readonly Dictionary<DebrisColor, string> bgTextureLookup = new() {
@@ -38,7 +40,6 @@ namespace FactoryHelper.Entities {
         private readonly int _randomSeed;
         private readonly DebrisColor _color;
         private bool _expanded;
-        public bool AttachToSolid;
         private Entity _filler;
         private Border _border;
 
@@ -64,13 +65,13 @@ namespace FactoryHelper.Entities {
             _randomSeed = Calc.Random.Next();
         }
 
+        public KillerDebris(EntityData data, Vector2 offset)
+            : this(data.Position + offset, data.Bool("attachToSolid"), data.Attr("color", "bronze")) {
+        }
+
         public enum DebrisColor {
             Silver,
             Bronze
-        }
-
-        public KillerDebris(EntityData data, Vector2 offset)
-            : this(data.Position + offset, data.Bool("attachToSolid"), data.Attr("color", "bronze")) {
         }
 
         public override void Awake(Scene scene) {

@@ -19,7 +19,7 @@ namespace FactoryHelper.Cutscenes {
         }
 
         private IEnumerator Cutscene(Level level) {
-            _player.StateMachine.State = 11;
+            _player.StateMachine.State = Player.StDummy;
             yield return 0.5f;
             Vector2 panTo = ((_machineHeart.Position - _player.Position) / 2) + _player.Position + (Vector2.UnitY * 10);
             yield return ZoomAndPan(panTo, 2f, 0.7f, true);
@@ -46,7 +46,7 @@ namespace FactoryHelper.Cutscenes {
         }
 
         public override void OnEnd(Level level) {
-            _player.StateMachine.State = 0;
+            _player.StateMachine.State = Player.StNormal;
             level.Camera.Position = _player.CameraTarget;
             Level.Camera.Zoom = 1f;
         }

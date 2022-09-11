@@ -118,7 +118,7 @@ namespace FactoryHelper {
             orig(self, position, spriteMode);
             ConveyorMover conveyorMover = new() {
                 OnMove = (amount) => {
-                    if (self.StateMachine.State != 1) {
+                    if (self.StateMachine.State != Player.StClimb) {
                         self.MoveH(amount * Engine.DeltaTime);
                     }
                 }

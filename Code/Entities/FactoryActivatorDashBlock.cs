@@ -12,12 +12,8 @@ namespace FactoryHelper.Entities {
         private readonly bool permanent;
         private EntityID id;
 
-        public FactoryActivatorDashBlock(EntityData data, Vector2 offset)
-        : this(data, offset, new EntityID(data.Level.Name, data.ID)) {
-        }
-
         public FactoryActivatorDashBlock(EntityData data, Vector2 offset, EntityID id)
-        : base(data.Position + offset, data.Char("tiletype", '3'), data.Width, data.Height, data.Bool("blendin"), data.Bool("permanent", defaultValue: true), data.Bool("canDash", defaultValue: true), id) {
+            : base(data.Position + offset, data.Char("tiletype", '3'), data.Width, data.Height, data.Bool("blendin"), data.Bool("permanent", defaultValue: true), data.Bool("canDash", defaultValue: true), id) {
             string activationIds = data.Attr("activationIds", "");
 
             foreach (string activationId in activationIds.Split(',')) {
@@ -28,6 +24,10 @@ namespace FactoryHelper.Entities {
 
             permanent = data.Bool("permanent", true);
             this.id = id;
+        }
+
+        public FactoryActivatorDashBlock(EntityData data, Vector2 offset)
+            : this(data, offset, new EntityID(data.Level.Name, data.ID)) {
         }
 
         public override void Awake(Scene scene) {

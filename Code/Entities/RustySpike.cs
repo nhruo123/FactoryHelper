@@ -38,21 +38,17 @@ namespace FactoryHelper.Entities {
             : this(data.Position + offset, GetSize(data, dir), dir) {
         }
 
-        public static Entity LoadUp(Level level, LevelData levelData, Vector2 offset, EntityData data) {
-            return new RustySpike(data, offset, Directions.Up);
-        }
+        public static Entity LoadUp(Level level, LevelData levelData, Vector2 offset, EntityData data)
+            => new RustySpike(data, offset, Directions.Up);
 
-        public static Entity LoadDown(Level level, LevelData levelData, Vector2 offset, EntityData data) {
-            return new RustySpike(data, offset, Directions.Down);
-        }
+        public static Entity LoadDown(Level level, LevelData levelData, Vector2 offset, EntityData data)
+            => new RustySpike(data, offset, Directions.Down);
 
-        public static Entity LoadLeft(Level level, LevelData levelData, Vector2 offset, EntityData data) {
-            return new RustySpike(data, offset, Directions.Left);
-        }
+        public static Entity LoadLeft(Level level, LevelData levelData, Vector2 offset, EntityData data)
+            => new RustySpike(data, offset, Directions.Left);
 
-        public static Entity LoadRight(Level level, LevelData levelData, Vector2 offset, EntityData data) {
-            return new RustySpike(data, offset, Directions.Right);
-        }
+        public static Entity LoadRight(Level level, LevelData levelData, Vector2 offset, EntityData data)
+            => new RustySpike(data, offset, Directions.Right);
 
         public override void Added(Scene scene) {
             base.Added(scene);

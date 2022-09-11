@@ -35,7 +35,8 @@ namespace FactoryHelper.Entities {
         private Tween tween;
         private Alarm alarm;
 
-        public Battery(Vector2 position, EntityID id) : base(position) {
+        public Battery(Vector2 position, EntityID id) 
+            : base(position) {
             ID = id;
             Collider = new Hitbox(12f, 12f, -6f, -6f);
             Add(follower = new Follower(id));
@@ -76,7 +77,9 @@ namespace FactoryHelper.Entities {
             Add(light = new VertexLight(Color.LightSeaGreen, 1f, 32, 48));
         }
 
-        public Battery(EntityData data, Vector2 offset) : this(data.Position + offset, new EntityID(data.Level.Name, data.ID)) { }
+        public Battery(EntityData data, Vector2 offset) 
+            : this(data.Position + offset, new EntityID(data.Level.Name, data.ID)) { 
+        }
 
         public Battery(Player player, EntityID id)
             : this(player.Position + new Vector2(-12 * (int)player.Facing, -8f), id) {

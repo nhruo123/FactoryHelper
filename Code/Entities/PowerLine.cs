@@ -16,15 +16,6 @@ namespace FactoryHelper.Entities {
         private readonly List<Image> _images = new();
         private Color _defaultColor;
 
-        public PowerLine(EntityData entityData, Vector2 offset)
-            : this(entityData.Position,
-                 offset,
-                 entityData.Nodes,
-                 entityData.Attr("activationId", ""),
-                 entityData.Attr("colorCode", "00dd00"),
-                 entityData.Bool("startActive", false)) {
-        }
-
         public PowerLine(Vector2 position, Vector2 offset, Vector2[] nodes, string activationId, string colorCode, bool startActive) {
             Position = offset;
             Add(Activator = new FactoryActivator());
@@ -52,6 +43,10 @@ namespace FactoryHelper.Entities {
             }
 
             Depth = 8999;
+        }
+
+        public PowerLine(EntityData data, Vector2 offset)
+            : this(data.Position, offset, data.Nodes, data.Attr("activationId", ""), data.Attr("colorCode", "00dd00"), data.Bool("startActive", false)) {
         }
 
         public enum Direction {

@@ -17,11 +17,8 @@ namespace FactoryHelper.Entities {
         private readonly VertexLight _light;
         private bool _inserting = false;
 
-        public BatteryBox(EntityData data, Vector2 offset) : this(data.Position + offset, data.Attr("activationIds")) {
-            _id = new EntityID(data.Level.Name, data.ID);
-        }
-
-        public BatteryBox(Vector2 position, string activationIds) : base(position) {
+        public BatteryBox(Vector2 position, string activationIds) 
+            : base(position) {
             Add(_boxSprite = FactoryHelperModule.SpriteBank.Create("battery_box"));
             Add(_batterySprite = FactoryHelperModule.SpriteBank.Create("battery"));
             _batterySprite.Play("idle");
@@ -42,6 +39,11 @@ namespace FactoryHelper.Entities {
             _light.Visible = false;
 
             Depth = 8499;
+        }
+
+        public BatteryBox(EntityData data, Vector2 offset)
+            : this(data.Position + offset, data.Attr("activationIds")) {
+            _id = new EntityID(data.Level.Name, data.ID);
         }
 
         public bool Activated {

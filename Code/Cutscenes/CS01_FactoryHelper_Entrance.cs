@@ -16,7 +16,7 @@ namespace FactoryHelper.Cutscenes {
         }
 
         private IEnumerator Cutscene(Level level) {
-            _player.StateMachine.State = 11;
+            _player.StateMachine.State = Player.StDummy;
             yield return 0.5f;
             yield return Textbox.Say("KaydenFox_FactoryMod_1_Factory_A_Entrance", WalkLeft, TurnBack);
             OnEnd(level);
@@ -35,7 +35,7 @@ namespace FactoryHelper.Cutscenes {
         }
 
         public override void OnEnd(Level level) {
-            _player.StateMachine.State = 0;
+            _player.StateMachine.State = Player.StNormal;
         }
     }
 }

@@ -29,15 +29,6 @@ namespace FactoryHelper.Entities {
         private bool _speedingUp;
         private Vector2 _defaultWindSpeed;
 
-        public WindTunnel(EntityData data, Vector2 offset)
-            : this(data.Position + offset,
-                data.Width,
-                data.Height,
-                data.Float("strength", 1f),
-                data.Attr("direction", "Up"),
-                data.Attr("activationId", ""),
-                data.Bool("startActive", false)) {  }
-
         public WindTunnel(Vector2 position, int width, int height, float strength, string direction, string activationId, bool startActive) {
             Depth = -1000;
             Position = position;
@@ -89,6 +80,11 @@ namespace FactoryHelper.Entities {
             for (int i = 0; i < _particles.Length; i++) {
                 Reset(i, Calc.Random.NextFloat(_baseAlpha));
             }
+        }
+
+        public WindTunnel(EntityData data, Vector2 offset)
+            : this(data.Position + offset, data.Width, data.Height, data.Float("strength", 1f), data.Attr("direction", "Up"),
+                   data.Attr("activationId", ""), data.Bool("startActive", false)) {
         }
 
         public enum Direction {

@@ -30,8 +30,7 @@ namespace FactoryHelper.Entities {
             return Scene.CollideCheck(new Rectangle((int)X - 2, (int)Y - 2, 4, 4), solid);
         }
 
-        protected override void OnSquish(CollisionData data) {
-        }
+        protected override void OnSquish(CollisionData data) { }
 
         private void HitPlayer(Player player) {
             if (!disabled) {

@@ -63,7 +63,8 @@ namespace FactoryHelper.Entities {
             _transitionListener.OnOut += FadeOutOnTransition;
         }
 
-        public SteamWall(float startPosition, Color c, float speed) : this(startPosition) {
+        public SteamWall(float startPosition, Color c, float speed) 
+            : this(startPosition) {
             Speed *= speed;
             color = c;
             P_SteamDebris.Color = c;

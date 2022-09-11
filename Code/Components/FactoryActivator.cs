@@ -17,7 +17,8 @@ namespace FactoryHelper.Components {
         public bool IsOn => Activated != StartOn;
         public bool StateIsLocked { get; set; } = false;
 
-        public FactoryActivator() : base(true, true) {
+        public FactoryActivator() 
+            : base(true, true) {
         }
 
         public void ForceActivate() {
