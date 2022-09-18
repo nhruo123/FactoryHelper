@@ -1,0 +1,133 @@
+mods.FactoryHelper.name=FactoryHelper
+
+# Battery
+entities.FactoryHelper/Battery.placements.name.battery=Battery
+
+# Battery Box
+entities.FactoryHelper/BatteryBox.placements.name.battery_box=Battery Box
+
+# Battery Box
+entities.FactoryHelper/Conveyor.placements.name.start_left=Conveyor (Left)
+entities.FactoryHelper/Conveyor.placements.name.start_right=Conveyor (Right)
+entities.FactoryHelper/Conveyor.attributes.description.activationId=String value of the entity's Activation Id. When a factory activator with this Id is turned on the entity will toggle state.
+entities.FactoryHelper/Conveyor.attributes.description.startLeft=If `true` the conveyor will initially be moving left.
+
+# Crate
+entities.FactoryHelper/ThrowBox.placements.name.wood=Crate (Wood)
+entities.FactoryHelper/ThrowBox.placements.name.metal=Crate (Metal)
+entities.FactoryHelper/ThrowBox.attributes.description.isMetal=Whether the crate is metallic or not. If `false` it will be wooden.
+entities.FactoryHelper/ThrowBox.attributes.description.tutorial=Whether the tutorial messsages should show up.
+entities.FactoryHelper/ThrowBox.attributes.description.isSpecial=Whether the crate should kill the player and return them to the crate's origin upon destruction or player death.
+entities.FactoryHelper/ThrowBox.attributes.description.isCrucial=Whether the crate should kill the player upon destruction.
+
+# Crate Spawner
+entities.FactoryHelper/ThrowBoxSpawner.placements.name.crate_spawner=Crate Spawner
+entities.FactoryHelper/ThrowBoxSpawner.attributes.description.activationId=String value of the entity's Activation Id. When a factory activator with this Id is turned on the entity will toggle state.
+entities.FactoryHelper/ThrowBoxSpawner.attributes.description.startActive=If `true` the entity will initially be active.
+entities.FactoryHelper/ThrowBoxSpawner.attributes.description.delay=The amount if time before a new crate is spawned after the previous one in seconds.
+entities.FactoryHelper/ThrowBoxSpawner.attributes.description.isMetal=Whether the crates spawned are metallic or not. If `false` they will be wooden. Ignored if Is Random is true.
+entities.FactoryHelper/ThrowBoxSpawner.attributes.description.isRandom=Whether the spawned crates should have a random material. If set to `true` the `Is Metal` value will be ignored.
+entities.FactoryHelper/ThrowBoxSpawner.attributes.description.fromTop=If `true` they will spawn on top, otherwise they will spawn at the nearest side. Defautls to `true`.
+entities.FactoryHelper/ThrowBoxSpawner.attributes.description.tutorial=Whether the tutorial messsages should show up.
+entities.FactoryHelper/ThrowBoxSpawner.attributes.description.maximum=The maximum number of crate this spawner can spawn. Destroyed crates do not count towards the maximum.
+
+# Dash Fuse Bose
+entities.FactoryHelper/DashFuseBox.placements.name.left=Dash Fuse Box (Left)
+entities.FactoryHelper/DashFuseBox.placements.name.right=Dash Fuse Box (Right)
+entities.FactoryHelper/DashFuseBox.attributes.description.direction=The direction the fuse box is facing.
+entities.FactoryHelper/DashFuseBox.attributes.description.activationIds=A comma separated set of string Ids for all the Activation Ids this box should activate.
+entities.FactoryHelper/DashFuseBox.attributes.description.persistent=Determines whether the Ids not already persistent that are governed by this box should become persistent, meaning they will be active even after leaving the room.
+
+# Dash Negator
+entities.FactoryHelper/DashNegator.placements.name.active=Dash Negator (Active)
+entities.FactoryHelper/DashNegator.placements.name.inactive=Dash Negator (Inactive)
+entities.FactoryHelper/DashNegator.attributes.description.activationId=String value of the entity's Activation Id. When a factory activator with this Id is turned on the entity will toggle state.
+entities.FactoryHelper/DashNegator.attributes.description.startActive=If `true` the entity will initially be active.
+
+# Debris
+entities.FactoryHelper/KillerDebris.placements.name.bronze=Debris (Bronze)
+entities.FactoryHelper/KillerDebris.placements.name.bronze_attached=Debris (Bronze, Attached)
+entities.FactoryHelper/KillerDebris.placements.name.silver=Debris (Silver)
+entities.FactoryHelper/KillerDebris.placements.name.silver_attached=Debris (Silver, Attached)
+entities.FactoryHelper/KillerDebris.attributes.description.color=Color of the debris.
+entities.FactoryHelper/KillerDebris.attributes.description.attachToSolid=Whether the debris should attach to moving solid entities.
+
+# Door Rusty
+entities.FactoryHelper/DoorRusty.placements.name.door_rusty=Door (Rusty)
+
+# Electrified Walls
+entities.FactoryHelper/ElectrifiedWallUp.placements.name.active=Spikes (Up, Electrified)
+entities.FactoryHelper/ElectrifiedWallUp.placements.name.inactive=Spikes (Up, Electrified, Inactive)
+entities.FactoryHelper/ElectrifiedWallUp.attributes.description.activationId=String value of the entity's Activation Id. When a factory activator with this Id is turned on the entity will toggle state.
+entities.FactoryHelper/ElectrifiedWallUp.attributes.description.startActive=If `true` the entity will initially be active.
+entities.FactoryHelper/ElectrifiedWallDown.placements.name.active=Spikes (Down, Electrified)
+entities.FactoryHelper/ElectrifiedWallDown.placements.name.inactive=Spikes (Down, Electrified, Inactive)
+entities.FactoryHelper/ElectrifiedWallDown.attributes.description.activationId=String value of the entity's Activation Id. When a factory activator with this Id is turned on the entity will toggle state.
+entities.FactoryHelper/ElectrifiedWallDown.attributes.description.startActive=If `true` the entity will initially be active.
+entities.FactoryHelper/ElectrifiedWallLeft.placements.name.active=Spikes (Left, Electrified)
+entities.FactoryHelper/ElectrifiedWallLeft.placements.name.inactive=Spikes (Left, Electrified, Inactive)
+entities.FactoryHelper/ElectrifiedWallLeft.attributes.description.activationId=String value of the entity's Activation Id. When a factory activator with this Id is turned on the entity will toggle state.
+entities.FactoryHelper/ElectrifiedWallLeft.attributes.description.startActive=If `true` the entity will initially be active.
+entities.FactoryHelper/ElectrifiedWallRight.placements.name.active=Spikes (Right, Electrified)
+entities.FactoryHelper/ElectrifiedWallRight.placements.name.inactive=Spikes (Right, Electrified, Inactive)
+entities.FactoryHelper/ElectrifiedWallRight.attributes.description.activationId=String value of the entity's Activation Id. When a factory activator with this Id is turned on the entity will toggle state.
+entities.FactoryHelper/ElectrifiedWallRight.attributes.description.startActive=If `true` the entity will initially be active.
+
+# Factory Activator Dash Block
+entities.FactoryHelper/FactoryActivatorDashBlock.placements.name.factory_activator_dash_block=Dash Block - Factory Activator
+entities.FactoryHelper/FactoryActivatorDashBlock.attributes.description.canDash=Whether the player can break the block by dashing into it.
+entities.FactoryHelper/FactoryActivatorDashBlock.attributes.description.blendin=Blends the block with the walls it touches, making it less apparent.
+entities.FactoryHelper/FactoryActivatorDashBlock.attributes.description.tiletype=Determines the visual appearance of the wall.
+entities.FactoryHelper/FactoryActivatorDashBlock.attributes.description.permanent=Once broken, the block will remain that way, even if the player dies. Also makes the factory activation permanent.
+entities.FactoryHelper/FactoryActivatorDashBlock.attributes.description.activationIds=A comma separated set of string Ids for all the Activation Ids this dash blcok should activate when broken.
+
+# Fan
+entities.FactoryHelper/FanHorizontal.placements.name.active=Fan (Horizontal, Active)
+entities.FactoryHelper/FanHorizontal.placements.name.inactive=Fan (Horizontal, Inactive)
+entities.FactoryHelper/FanHorizontal.attributes.description.activationId=String value of the entity's Activation Id. When a factory activator with this Id is turned on the entity will toggle state.
+entities.FactoryHelper/FanHorizontal.attributes.description.startActive=If `true` the entity will initially be active.
+entities.FactoryHelper/FanVertical.placements.name.active=Fan (Vertical, Active)
+entities.FactoryHelper/FanVertical.placements.name.inactive=Fan (Vertical, Inactive)
+entities.FactoryHelper/FanVertical.attributes.description.activationId=String value of the entity's Activation Id. When a factory activator with this Id is turned on the entity will toggle state.
+entities.FactoryHelper/FanVertical.attributes.description.startActive=If `true` the entity will initially be active.
+
+# Jump Thru Rusty
+entities.FactoryHelper/RustyJumpthruPlatform.placements.name.jump_thru_rusty=Jump Through (Rusty Metal)
+
+# Machine Heart
+entities.FactoryHelper/MachineHeart.placements.name.machine_heart=Machine Heart
+
+# Piston
+entities.FactoryHelper/PistonUp.placements.name.normal=Piston (Up)
+entities.FactoryHelper/PistonUp.placements.name.heated=Piston (Up, Heated)
+entities.FactoryHelper/PistonUp.attributes.description.moveTime=The time it takes for the piston head to travel between its start and end position in seconds.
+entities.FactoryHelper/PistonUp.attributes.description.pauseTime=The time the piston head waits in place after movement is done before moving again in seconds.
+entities.FactoryHelper/PistonUp.attributes.description.initialDelay=The time it takes before the piston first starts moving in seconds.
+entities.FactoryHelper/PistonUp.attributes.description.startActive=If `true` the entity will initially be active.
+entities.FactoryHelper/PistonUp.attributes.description.heated=Whether the pipe is heated or not.
+entities.FactoryHelper/PistonUp.attributes.description.activationId=String value of the entity's Activation Id. When a factory activator with this Id is turned on the piston will toggle state.
+entities.FactoryHelper/PistonDown.placements.name.normal=Piston (Down)
+entities.FactoryHelper/PistonDown.placements.name.heated=Piston (Down, Heated)
+entities.FactoryHelper/PistonDown.attributes.description.moveTime=The time it takes for the piston head to travel between its start and end position in seconds.
+entities.FactoryHelper/PistonDown.attributes.description.pauseTime=The time the piston head waits in place after movement is done before moving again in seconds.
+entities.FactoryHelper/PistonDown.attributes.description.initialDelay=The time it takes before the piston first starts moving in seconds.
+entities.FactoryHelper/PistonDown.attributes.description.startActive=If `true` the entity will initially be active.
+entities.FactoryHelper/PistonDown.attributes.description.heated=Whether the pipe is heated or not.
+entities.FactoryHelper/PistonDown.attributes.description.activationId=String value of the entity's Activation Id. When a factory activator with this Id is turned on the piston will toggle state.
+entities.FactoryHelper/PistonLeft.placements.name.normal=Piston (Left)
+entities.FactoryHelper/PistonLeft.placements.name.heated=Piston (Left, Heated)
+entities.FactoryHelper/PistonLeft.attributes.description.moveTime=The time it takes for the piston head to travel between its start and end position in seconds.
+entities.FactoryHelper/PistonLeft.attributes.description.pauseTime=The time the piston head waits in place after movement is done before moving again in seconds.
+entities.FactoryHelper/PistonLeft.attributes.description.initialDelay=The time it takes before the piston first starts moving in seconds.
+entities.FactoryHelper/PistonLeft.attributes.description.startActive=If `true` the entity will initially be active.
+entities.FactoryHelper/PistonLeft.attributes.description.heated=Whether the pipe is heated or not.
+entities.FactoryHelper/PistonLeft.attributes.description.activationId=String value of the entity's Activation Id. When a factory activator with this Id is turned on the piston will toggle state.
+entities.FactoryHelper/PistonRight.placements.name.normal=Piston (Right)
+entities.FactoryHelper/PistonRight.placements.name.heated=Piston (Right, Heated)
+entities.FactoryHelper/PistonRight.attributes.description.moveTime=The time it takes for the piston head to travel between its start and end position in seconds.
+entities.FactoryHelper/PistonRight.attributes.description.pauseTime=The time the piston head waits in place after movement is done before moving again in seconds.
+entities.FactoryHelper/PistonRight.attributes.description.initialDelay=The time it takes before the piston first starts moving in seconds.
+entities.FactoryHelper/PistonRight.attributes.description.startActive=If `true` the entity will initially be active.
+entities.FactoryHelper/PistonRight.attributes.description.heated=Whether the pipe is heated or not.
+entities.FactoryHelper/PistonRight.attributes.description.activationId=String value of the entity's Activation Id. When a factory activator with this Id is turned on the piston will toggle state.
+
