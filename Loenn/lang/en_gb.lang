@@ -1,10 +1,11 @@
-mods.FactoryHelper.name=FactoryHelper
+mods.FactoryHelper.name=Factory Helper
 
 # Battery
 entities.FactoryHelper/Battery.placements.name.battery=Battery
 
 # Battery Box
 entities.FactoryHelper/BatteryBox.placements.name.battery_box=Battery Box
+entities.FactoryHelper/BatteryBox.attributes.description.activationIds=A comma separated set of string Ids for all the Activation Ids this box should activate.
 
 # Battery Box
 entities.FactoryHelper/Conveyor.placements.name.start_left=Conveyor (Left)
@@ -24,10 +25,10 @@ entities.FactoryHelper/ThrowBox.attributes.description.isCrucial=Whether the cra
 entities.FactoryHelper/ThrowBoxSpawner.placements.name.crate_spawner=Crate Spawner
 entities.FactoryHelper/ThrowBoxSpawner.attributes.description.activationId=String value of the entity's Activation Id. When a factory activator with this Id is turned on the entity will toggle state.
 entities.FactoryHelper/ThrowBoxSpawner.attributes.description.startActive=If `true` the entity will initially be active.
-entities.FactoryHelper/ThrowBoxSpawner.attributes.description.delay=The amount if time before a new crate is spawned after the previous one in seconds.
+entities.FactoryHelper/ThrowBoxSpawner.attributes.description.delay=The amount of time before a new crate is spawned after the previous one in seconds.
 entities.FactoryHelper/ThrowBoxSpawner.attributes.description.isMetal=Whether the crates spawned are metallic or not. If `false` they will be wooden. Ignored if Is Random is true.
 entities.FactoryHelper/ThrowBoxSpawner.attributes.description.isRandom=Whether the spawned crates should have a random material. If set to `true` the `Is Metal` value will be ignored.
-entities.FactoryHelper/ThrowBoxSpawner.attributes.description.fromTop=If `true` they will spawn on top, otherwise they will spawn at the nearest side. Defautls to `true`.
+entities.FactoryHelper/ThrowBoxSpawner.attributes.description.fromTop=If `true` they will spawn on top, otherwise they will spawn at the nearest side. Defaults to `true`.
 entities.FactoryHelper/ThrowBoxSpawner.attributes.description.tutorial=Whether the tutorial messsages should show up.
 entities.FactoryHelper/ThrowBoxSpawner.attributes.description.maximum=The maximum number of crate this spawner can spawn. Destroyed crates do not count towards the maximum.
 
@@ -44,7 +45,7 @@ entities.FactoryHelper/DashNegator.placements.name.inactive=Dash Negator (Inacti
 entities.FactoryHelper/DashNegator.attributes.description.activationId=String value of the entity's Activation Id. When a factory activator with this Id is turned on the entity will toggle state.
 entities.FactoryHelper/DashNegator.attributes.description.startActive=If `true` the entity will initially be active.
 
-# Debris
+# Killer Debris
 entities.FactoryHelper/KillerDebris.placements.name.bronze=Debris (Bronze)
 entities.FactoryHelper/KillerDebris.placements.name.bronze_attached=Debris (Bronze, Attached)
 entities.FactoryHelper/KillerDebris.placements.name.silver=Debris (Silver)
@@ -104,7 +105,7 @@ entities.FactoryHelper/PistonUp.attributes.description.moveTime=The time it take
 entities.FactoryHelper/PistonUp.attributes.description.pauseTime=The time the piston head waits in place after movement is done before moving again in seconds.
 entities.FactoryHelper/PistonUp.attributes.description.initialDelay=The time it takes before the piston first starts moving in seconds.
 entities.FactoryHelper/PistonUp.attributes.description.startActive=If `true` the entity will initially be active.
-entities.FactoryHelper/PistonUp.attributes.description.heated=Whether the pipe is heated or not.
+entities.FactoryHelper/PistonUp.attributes.description.heated=Whether the pipe is heated or not. A heated pipe kills the player when grabbed or stood on.
 entities.FactoryHelper/PistonUp.attributes.description.activationId=String value of the entity's Activation Id. When a factory activator with this Id is turned on the piston will toggle state.
 entities.FactoryHelper/PistonDown.placements.name.normal=Piston (Down)
 entities.FactoryHelper/PistonDown.placements.name.heated=Piston (Down, Heated)
@@ -112,7 +113,7 @@ entities.FactoryHelper/PistonDown.attributes.description.moveTime=The time it ta
 entities.FactoryHelper/PistonDown.attributes.description.pauseTime=The time the piston head waits in place after movement is done before moving again in seconds.
 entities.FactoryHelper/PistonDown.attributes.description.initialDelay=The time it takes before the piston first starts moving in seconds.
 entities.FactoryHelper/PistonDown.attributes.description.startActive=If `true` the entity will initially be active.
-entities.FactoryHelper/PistonDown.attributes.description.heated=Whether the pipe is heated or not.
+entities.FactoryHelper/PistonDown.attributes.description.heated=Whether the pipe is heated or not. A heated pipe kills the player when grabbed or stood on.
 entities.FactoryHelper/PistonDown.attributes.description.activationId=String value of the entity's Activation Id. When a factory activator with this Id is turned on the piston will toggle state.
 entities.FactoryHelper/PistonLeft.placements.name.normal=Piston (Left)
 entities.FactoryHelper/PistonLeft.placements.name.heated=Piston (Left, Heated)
@@ -120,7 +121,7 @@ entities.FactoryHelper/PistonLeft.attributes.description.moveTime=The time it ta
 entities.FactoryHelper/PistonLeft.attributes.description.pauseTime=The time the piston head waits in place after movement is done before moving again in seconds.
 entities.FactoryHelper/PistonLeft.attributes.description.initialDelay=The time it takes before the piston first starts moving in seconds.
 entities.FactoryHelper/PistonLeft.attributes.description.startActive=If `true` the entity will initially be active.
-entities.FactoryHelper/PistonLeft.attributes.description.heated=Whether the pipe is heated or not.
+entities.FactoryHelper/PistonLeft.attributes.description.heated=Whether the pipe is heated or not. A heated pipe kills the player when grabbed or stood on.
 entities.FactoryHelper/PistonLeft.attributes.description.activationId=String value of the entity's Activation Id. When a factory activator with this Id is turned on the piston will toggle state.
 entities.FactoryHelper/PistonRight.placements.name.normal=Piston (Right)
 entities.FactoryHelper/PistonRight.placements.name.heated=Piston (Right, Heated)
@@ -128,6 +129,6 @@ entities.FactoryHelper/PistonRight.attributes.description.moveTime=The time it t
 entities.FactoryHelper/PistonRight.attributes.description.pauseTime=The time the piston head waits in place after movement is done before moving again in seconds.
 entities.FactoryHelper/PistonRight.attributes.description.initialDelay=The time it takes before the piston first starts moving in seconds.
 entities.FactoryHelper/PistonRight.attributes.description.startActive=If `true` the entity will initially be active.
-entities.FactoryHelper/PistonRight.attributes.description.heated=Whether the pipe is heated or not.
+entities.FactoryHelper/PistonRight.attributes.description.heated=Whether the pipe is heated or not. A heated pipe kills the player when grabbed or stood on.
 entities.FactoryHelper/PistonRight.attributes.description.activationId=String value of the entity's Activation Id. When a factory activator with this Id is turned on the piston will toggle state.
 
