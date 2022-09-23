@@ -4,7 +4,7 @@ batteryBox.name = "FactoryHelper/BatteryBox"
 batteryBox.placements = {
     name = "battery_box",
     data = {
-        activationsIds = ""
+        activationIds = ""
     }
 }
 
