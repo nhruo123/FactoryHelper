@@ -1,31 +1,31 @@
 local utils = require("utils")
 
-local debris = {}
+local killerDebris = {}
 
 local debrisColors = {
     "Bronze",
     "Silver"
 }
 
-debris.name = "FactoryHelper/KillerDebris"
+killerDebris.name = "FactoryHelper/KillerDebris"
 
-debris.fieldInformation = {
+killerDebris.fieldInformation = {
     color = {
         editable = false,
         options = debrisColors
     }
 }
 
-debris.placements = {}
+killerDebris.placements = {}
 for _, color in ipairs(debrisColors) do
-    table.insert(debris.placements, {
+    table.insert(killerDebris.placements, {
         name = string.lower(color),
         data = {
             color = color,
             attachToSolid = false,
         }
     })
-    table.insert(debris.placements, {
+    table.insert(killerDebris.placements, {
         name = string.lower(color) .. "_attached",
         data = {
             color = color,
@@ -34,13 +34,13 @@ for _, color in ipairs(debrisColors) do
     })
 end
 
-function debris.texture(room, entity)
+function killerDebris.texture(room, entity)
     local color = entity.color or "Bronze"
     return string.format("danger/FactoryHelper/debris/fg_%s1", color)
 end
 
-function debris.selection(room, entity)
+function killerDebris.selection(room, entity)
     return utils.rectangle(entity.x - 9, entity.y - 9, 18, 18)
 end
 
-return debris
+return killerDebris
