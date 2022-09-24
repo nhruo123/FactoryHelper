@@ -15,18 +15,10 @@ local spikeJustifications = {
     left = {x = 1.0, y = 0.0}
 }
 
-local function getJustification(direction)
-    return spikeJustifications[direction] or {0, 0}
-end
-
-local function getOffset(direction)
-    return spikeOffsets[direction] or {0, 0}
-end
-
 local function getSpikeSpritesFromTexture(entity, direction, texture)
     local horizontal = direction == "left" or direction == "right"
-    local justification = getJustification(direction)
-    local offset = getOffset(direction)
+    local justification = spikeJustifications[direction] or {0, 0}
+    local offset = spikeOffsets[direction] or {0, 0}
     local length = horizontal and (entity.height or 8) or (entity.width or 8)
     local positionOffsetKey = horizontal and "y" or "x"
 
