@@ -18,7 +18,7 @@ const placements = Ahorn.PlacementDict(
     ),
 )
 
-patterns = ["None", "FlickerOn", "LightFlicker", "TurnOffFlickerOn"]
+patterns = ["None", "FlickerOn", "FlickerOff", "LightFlicker", "TurnOffFlickerOn"]
 
 Ahorn.editingOptions(entity::RustyLamp) = Dict{String, Any}(
     "strobePattern" => patterns

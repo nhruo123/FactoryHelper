@@ -10,6 +10,7 @@ rustyLamp.fieldInformation = {
         options = {
             ["None"] = "None",
             ["Flicker On"] = "FlickerOn",
+            ["Flicker Off"] = "FlickerOff",
             ["Light Flicker"] = "LightFlicker",
             ["Turn Off, Flicker On"] = "TurnOffFlickerOn"
         }

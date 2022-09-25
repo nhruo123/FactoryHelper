@@ -10,12 +10,9 @@ rustBerry.placements = {
 }
 
 function rustBerry.sprite(room, entity)
-    local button = drawableSprite.fromTexture("objects/FactoryHelper/rustBerry/berry_01", entity)
-    local case = drawableSprite.fromTexture("objects/FactoryHelper/rustBerry/gear_01", entity)
-
     return {
-        case,
-        button
+        drawableSprite.fromTexture("objects/FactoryHelper/rustBerry/berry_01", entity),
+        drawableSprite.fromTexture("objects/FactoryHelper/rustBerry/gear_01", entity)
     }
 end
 

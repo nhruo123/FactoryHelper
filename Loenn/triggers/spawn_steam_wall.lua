@@ -2,9 +2,6 @@ local spawnSteamWall = {}
 
 spawnSteamWall.name = "FactoryHelper/SpawnSteamWallTrigger"
 spawnSteamWall.fieldInformation = {
-    speed = {
-        minimumValue = 0.0
-    },
     color = {
         fieldType = "color"
     }
