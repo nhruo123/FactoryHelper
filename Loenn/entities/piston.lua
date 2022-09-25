@@ -5,7 +5,9 @@ local drawing = require("utils.drawing")
 
 local baseTexture = "objects/FactoryHelper/piston/base00"
 local headTexture = "objects/FactoryHelper/piston/head00"
-local fakeNodeColor = {1.0, 1.0, 1.0, 0.65}
+local normalBodyTextureRaw = "objects/FactoryHelper/piston/body0"
+local heatedBodyTextureRaw = "objects/FactoryHelper/piston/body_h0"
+local ghostColor = {1.0, 1.0, 1.0, 0.65}
 local dottedLineColor = {1.0, 0.0, 1.0, 0.25}
 
 local rotations = {
@@ -34,6 +36,13 @@ local units = {
     down = {x = 0, y = 1},
     left = {x = -1, y = 0},
     right = {x = 1, y = 0}
+}
+
+local pistonOffsetFactors = {
+    up = 1,
+    down = -1,
+    left = 1,
+    right = -1,
 }
 
 local function addDottedLineSprites(sprites, ax, ay, bx, by, line, gap, color)
@@ -87,13 +96,29 @@ local function createHandler(name, direction)
         }
     }
 
-
     local horizontal = direction == "up" or direction == "down"
     local w, h = horizontal and 16 or 8, horizontal and 8 or 16
     local rotation = rotations[direction]
     local offset = offsets[direction]
     local alignAxis, moveAxis = horizontal and "x" or "y", horizontal and "y" or "x"
     local of = offsetFactors[direction]
+    local unit = units[direction]
+    local pistonOffsetFactor = pistonOffsetFactors[direction]
+
+    local function addPistonSprites(sprites, entity, from, to, rawTexture, color)
+        local diff = (from[moveAxis] - to[moveAxis])
+        local sign = pistonOffsetFactor * (diff > 0 and 1 or -1)
+        local length = math.abs(diff / 8)
+        for i = 1, length do
+            local midSprite = drawableSprite.fromTexture(rawTexture .. i % 4, entity)
+            midSprite.rotation = rotation
+            midSprite:setPosition(from.x, from.y)
+            midSprite:addPosition(unit.x * 8 * i * sign, unit.y * 8 * i * sign)
+            midSprite:setJustification(0.0, 0.0)
+            midSprite.color = color or {1.0, 1.0, 1.0, 1.0}
+            table.insert(sprites, midSprite)
+        end
+    end
 
     function handler.sprite(room, entity)
         local sprites = {}
@@ -119,17 +144,21 @@ local function createHandler(name, direction)
         fakeFromNodeSprite:addPosition(offset.x, offset.y)
         fakeToNodeSprite:addPosition(offset.x, offset.y)
 
-        fakeFromNodeSprite[alignAxis] = baseSprite[alignAxis]
-        fakeToNodeSprite[alignAxis] = baseSprite[alignAxis]
-
-        fromNodeSprite.color = fakeNodeColor
-        toNodeSprite.color = fakeNodeColor
-
         baseSprite.rotation = rotation
         fromNodeSprite.rotation = rotation
         toNodeSprite.rotation = rotation
         fakeFromNodeSprite.rotation = rotation
         fakeToNodeSprite.rotation = rotation
+
+        fakeFromNodeSprite[alignAxis] = baseSprite[alignAxis]
+        fakeToNodeSprite[alignAxis] = baseSprite[alignAxis]
+
+        fromNodeSprite.color = ghostColor
+        toNodeSprite.color = ghostColor
+
+        local bodyRawTexture = entity.heated and heatedBodyTextureRaw or normalBodyTextureRaw
+        addPistonSprites(sprites, entity, baseSprite, fakeFromNodeSprite, bodyRawTexture)
+        addPistonSprites(sprites, entity, fakeFromNodeSprite, fakeToNodeSprite, bodyRawTexture, ghostColor)
 
         table.insert(sprites, baseSprite)
         table.insert(sprites, fromNodeSprite)
