@@ -23,8 +23,6 @@ windTunnel.fieldInformation = {
 
 windTunnel.placements = {}
 for _, direction in ipairs(directions) do
-    print(string.lower(direction) .. "_active")
-    print(string.lower(direction) .. "_inactive")
     local activePlacement = {
         name = string.lower(direction) .. "_active",
         data = {
