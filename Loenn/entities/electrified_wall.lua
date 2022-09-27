@@ -1,4 +1,6 @@
 local utils = require("utils")
+local drawableRectangle = require("structs.drawable_rectangle")
+local drawableSprite = require("structs.drawable_sprite")
 
 local fillColor = {0.55, 0.97, 0.96, 0.4}
 local borderColor = {0.99, 0.96, 0.47, 1.0}
@@ -27,26 +29,45 @@ local function createHandler(name, dir)
                 activationId = "",
                 startActive = true
             }
-        },
-        {
-            name = "inactive",
-            data = {
-                width = minWidth,
-                height = minHeight,
-                activationId = "",
-                startActive = false
-            }
         }
     }
-
-    function handler.rectangle(room, entity, _)
-        return handler.selection(room, entity)
+    
+    function handler.sprite(room, entity)
+        local sprites = {}
+                
+        local texture = "objects/FactoryHelper/electrifiedWall/knob_" .. dir .. "00"
+        local horizontal = dir == "up" or dir == "down"
+        local baseOffsetX = dir == "left" and -3 or 5
+        local baseOffsetY = dir == "up" and -3 or 5
+        
+        local baseColor = entity.startActive and fillColor or fillColorInactive
+        local fill = drawableRectangle.fromRectangle("fill", handler.selection(room, entity), baseColor)
+        table.insert(sprites, fill)
+                
+        for i = 0,1 do
+            local spikeSprite = drawableSprite.fromTexture(texture, entity)
+            spikeSprite.x += baseOffsetX + (horizontal and i * (entity.width - 10) or 0)
+            spikeSprite.y += baseOffsetY + (horizontal and 0 or i * (entity.height - 10))
+            table.insert(sprites, spikeSprite)
+        end
+        
+        local edgeColor = entity.startActive and borderColor or borderColorInactive
+        local line = drawableRectangle.fromRectangle("line", handler.selection(room, entity), edgeColor)
+        table.insert(sprites, line)
+                       
+        return sprites
     end
-    function handler.fillColor(room, entity)
-        return entity.startActive and fillColor or fillColorInactive
-    end
-    function handler.borderColor(room, entity)
-        return entity.startActive and borderColor or borderColorInactive
+    
+    function handler.selection(room, entity)
+        if dir == "up" then
+            return utils.rectangle(entity.x, entity.y - 6, entity.width, 8)
+        elseif dir == "down" then
+            return utils.rectangle(entity.x, entity.y, entity.width, 8)
+        elseif dir == "left" then
+            return utils.rectangle(entity.x - 6, entity.y, 8, entity.height)
+        elseif dir == "right" then
+            return utils.rectangle(entity.x, entity.y, 8, entity.height)
+        end
     end
 
     return handler
@@ -56,19 +77,6 @@ local electrifiedWallUp = createHandler("FactoryHelper/ElectrifiedWallUp", "up")
 local electrifiedWallDown = createHandler("FactoryHelper/ElectrifiedWallDown", "down")
 local electrifiedWallLeft = createHandler("FactoryHelper/ElectrifiedWallLeft", "left")
 local electrifiedWallRight = createHandler("FactoryHelper/ElectrifiedWallRight", "right")
-
-function electrifiedWallUp.selection(room, entity)
-    return utils.rectangle(entity.x, entity.y - 6, entity.width, 6)
-end
-function electrifiedWallDown.selection(room, entity)
-    return utils.rectangle(entity.x, entity.y, entity.width, 6)
-end
-function electrifiedWallLeft.selection(room, entity)
-    return utils.rectangle(entity.x - 6, entity.y, 6, entity.height)
-end
-function electrifiedWallRight.selection(room, entity)
-    return utils.rectangle(entity.x, entity.y, 6, entity.height)
-end
 
 return {
     electrifiedWallUp,

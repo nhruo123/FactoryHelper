@@ -5,7 +5,7 @@ using ..Ahorn, Maple
 @mapdef Entity "FactoryHelper/FactoryActivatorDashBlock" FactoryActivatorDashBlock(x::Integer, y::Integer, width::Integer=8, height::Integer=8, tiletype::String="3", blendin::Bool=true, canDash::Bool=true, permanent::Bool=true, activationIds::String="")
 
 const placements = Ahorn.PlacementDict(
-    "Dash Block - Factory Activator (Factory Helper)" => Ahorn.EntityPlacement(
+    "Factory Dash Block (Factory Helper)" => Ahorn.EntityPlacement(
         FactoryActivatorDashBlock,
         "rectangle",
         Dict{String, Any}(),

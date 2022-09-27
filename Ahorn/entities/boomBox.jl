@@ -5,17 +5,13 @@ using ..Ahorn, Maple
 @mapdef Entity "FactoryHelper/BoomBox" BoomBox(x::Integer, y::Integer, activationId::String="", initialDelay::Real=0.0, startActive::Bool=false)
 
 const placements = Ahorn.PlacementDict(
-    "Boom Box (Inactive) (FactoryHelper)" => Ahorn.EntityPlacement(
-        BoomBox,
-        "point",
-    ),
-    "Boom Box (Active) (FactoryHelper)" => Ahorn.EntityPlacement(
+    "Boom Box (FactoryHelper)" => Ahorn.EntityPlacement(
         BoomBox,
         "point",
         Dict{String, Any}(
-			"startActive" => true
-		),
-    ),
+          "startActive" => true
+        ),
+    )
 )
 
 idleSprite = "objects/FactoryHelper/boomBox/idle00"

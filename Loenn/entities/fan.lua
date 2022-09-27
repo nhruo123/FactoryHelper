@@ -13,23 +13,12 @@ local function createHandler(name, horizontal)
     handler.canResize = {horizontal, not horizontal}
 
     handler.placements = {
-        {
-            name = "inactive",
-            data = {
-                width = minimumWidth,
-                height = minimumHeight,
-                startActive = false,
-                activationId = ""
-            }
-        },
-        {
-            name = "active",
-            data = {
-                width = minimumWidth,
-                height = minimumHeight,
-                startActive = true,
-                activationId = ""
-            }
+        name = "active",
+        data = {
+            width = minimumWidth,
+            height = minimumHeight,
+            startActive = true,
+            activationId = ""
         }
     }
 

@@ -21,23 +21,12 @@ rustyLamp.fieldInformation = {
 }
 
 rustyLamp.placements = {
-    {
-        name = "active",
-        data = {
-            activationId = "",
-            strobePattern = "None",
-            initialDelay = 0.0,
-            startActive = true
-        }
-    },
-    {
-        name = "inactive",
-        data = {
-            activationId = "",
-            strobePattern = "None",
-            initialDelay = 0.0,
-            startActive = false
-        }
+    name = "active",
+    data = {
+        activationId = "",
+        strobePattern = "None",
+        initialDelay = 0.0,
+        startActive = true
     }
 }
 

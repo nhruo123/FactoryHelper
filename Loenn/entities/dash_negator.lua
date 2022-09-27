@@ -7,23 +7,12 @@ dashNegator.name = "FactoryHelper/DashNegator"
 dashNegator.minimumSize = {16, 32}
 
 dashNegator.placements = {
-    {
-        name = "active",
-        data = {
-            width = 16,
-            height = 32,
-            activationId = "",
-            startActive = true
-        }
-    },
-    {
-        name = "inactive",
-        data = {
-            width = 16,
-            height = 32,
-            activationId = "",
-            startActive = false
-        }
+    name = "active",
+    data = {
+        width = 16,
+        height = 32,
+        activationId = "",
+        startActive = true
     }
 }
 

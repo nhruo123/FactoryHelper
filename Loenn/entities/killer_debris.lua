@@ -25,13 +25,6 @@ for _, color in ipairs(debrisColors) do
             attachToSolid = false,
         }
     })
-    table.insert(killerDebris.placements, {
-        name = string.lower(color) .. "_attached",
-        data = {
-            color = color,
-            attachToSolid = true,
-        }
-    })
 end
 
 function killerDebris.texture(room, entity)

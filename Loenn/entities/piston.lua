@@ -72,27 +72,14 @@ local function createHandler(name, direction)
     }
 
     handler.placements = {
-        {
-            name = "normal",
-            data = {
-                moveTime = 0.4,
-                pauseTime = 0.2,
-                initialDelay = 0.0,
-                startActive = true,
-                heated = false,
-                activationId = ""
-            }
-        },
-        {
-            name = "heated",
-            data = {
-                moveTime = 0.4,
-                pauseTime = 0.2,
-                initialDelay = 0.0,
-                startActive = true,
-                heated = true,
-                activationId = ""
-            }
+        name = "normal",
+        data = {
+            moveTime = 0.4,
+            pauseTime = 0.2,
+            initialDelay = 0.0,
+            startActive = true,
+            heated = false,
+            activationId = ""
         }
     }
 
@@ -173,14 +160,14 @@ local function createHandler(name, direction)
     end
 
     function handler.selection(room, entity)
-        local nodes = entity.nodes or {{x = 0, y = 0}, {x = 0, y = 0}}
+        local nodes = entity.nodes or {{x = 0, y = -5}, {x = 0, y = -10}}
         local from, to = nodes[1], nodes[2]
         return utils.rectangle(entity.x, entity.y, w, h), {
             utils.rectangle(from.x, from.y, w, h),
             utils.rectangle(to.x, to.y, w, h)
         }
     end
-
+    
     return handler
 end
 

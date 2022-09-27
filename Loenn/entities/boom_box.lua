@@ -9,21 +9,11 @@ boomBox.fieldInformation = {
 }
 
 boomBox.placements = {
-    {
-        name = "active",
-        data = {
-            activationId = "",
-            initialDelay = 0.0,
-            startActive = true
-        }
-    },
-    {
-        name = "inactive",
-        data = {
-            activationId = "",
-            initialDelay = 0.0,
-            startActive = false
-        }
+    name = "active",
+    data = {
+        activationId = "",
+        initialDelay = 0.0,
+        startActive = true
     }
 }
 
