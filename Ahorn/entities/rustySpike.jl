@@ -17,19 +17,19 @@ directions = Dict{String, String}(
 )
 
 const placements = Ahorn.PlacementDict(
-    "Spikes (Up, Rusty) (FactoryHelper)" => Ahorn.EntityPlacement(
+    "Rusty Spikes (Up) (FactoryHelper)" => Ahorn.EntityPlacement(
         RustySpikeUp,
         "rectangle",
     ),
-    "Spikes (Down, Rusty) (FactoryHelper)" => Ahorn.EntityPlacement(
+    "Rusty Spikes (Down) (FactoryHelper)" => Ahorn.EntityPlacement(
         RustySpikeDown,
         "rectangle",
     ),
-    "Spikes (Left, Rusty) (FactoryHelper)" => Ahorn.EntityPlacement(
+    "Rusty Spikes (Left) (FactoryHelper)" => Ahorn.EntityPlacement(
         RustySpikeLeft,
         "rectangle",
     ),
-    "Spikes (Right, Rusty) (FactoryHelper)" => Ahorn.EntityPlacement(
+    "Rusty Spikes (Right) (FactoryHelper)" => Ahorn.EntityPlacement(
         RustySpikeRight,
         "rectangle",
     ),

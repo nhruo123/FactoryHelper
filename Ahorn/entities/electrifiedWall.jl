@@ -17,50 +17,22 @@ directions = Dict{String, String}(
 )
 
 const placements = Ahorn.PlacementDict(
-    "Spikes (Up, Electrified) (FactoryHelper)" => Ahorn.EntityPlacement(
+    "Electrified Spikes (Up) (FactoryHelper)" => Ahorn.EntityPlacement(
         ElectrifiedWallUp,
         "rectangle",
     ),
-    "Spikes (Down, Electrified) (FactoryHelper)" => Ahorn.EntityPlacement(
+    "Electrified Spikes (Down) (FactoryHelper)" => Ahorn.EntityPlacement(
         ElectrifiedWallDown,
         "rectangle",
     ),
-    "Spikes (Left, Electrified) (FactoryHelper)" => Ahorn.EntityPlacement(
+    "Electrified Spikes (Left) (FactoryHelper)" => Ahorn.EntityPlacement(
         ElectrifiedWallLeft,
         "rectangle",
     ),
-    "Spikes (Right, Electrified) (FactoryHelper)" => Ahorn.EntityPlacement(
+    "Electrified Spikes (Right) (FactoryHelper)" => Ahorn.EntityPlacement(
         ElectrifiedWallRight,
         "rectangle",
-    ),
-    "Spikes (Up, Electrified, Inactive) (FactoryHelper)" => Ahorn.EntityPlacement(
-        ElectrifiedWallUp,
-        "rectangle",
-        Dict{String, Any}(
-			"startActive" => false,
-        )
-    ),
-    "Spikes (Down, Electrified, Inactive) (FactoryHelper)" => Ahorn.EntityPlacement(
-        ElectrifiedWallDown,
-        "rectangle",
-        Dict{String, Any}(
-			"startActive" => false,
-        )
-    ),
-    "Spikes (Left, Electrified, Inactive) (FactoryHelper)" => Ahorn.EntityPlacement(
-        ElectrifiedWallLeft,
-        "rectangle",
-        Dict{String, Any}(
-			"startActive" => false,
-        )
-    ),
-    "Spikes (Right, Electrified, Inactive) (FactoryHelper)" => Ahorn.EntityPlacement(
-        ElectrifiedWallRight,
-        "rectangle",
-        Dict{String, Any}(
-			"startActive" => false,
-        )
-    ),
+    )
 )
 
 offsets = Dict{String, Tuple{Integer, Integer}}(

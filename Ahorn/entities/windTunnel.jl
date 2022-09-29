@@ -9,17 +9,7 @@ directions = ["Up", "Down", "Left", "Right"]
 const placements = Ahorn.PlacementDict()
 
 for direction in directions
-    placements["Wind Tunnel (Inactive) ($(direction)) (FactoryHelper)"] = Ahorn.EntityPlacement(
-        WindTunnel,
-        "rectangle",
-        Dict{String, Any}(
-            "direction" => direction,
-        )
-    )
-end
-
-for direction in directions
-    placements["Wind Tunnel (Active) ($(direction)) (FactoryHelper)"] = Ahorn.EntityPlacement(
+    placements["Wind Tunnel ($(direction)) (FactoryHelper)"] = Ahorn.EntityPlacement(
         WindTunnel,
         "rectangle",
         Dict{String, Any}(

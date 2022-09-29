@@ -2,7 +2,7 @@ module FactoryHelperKillerDebris
 
 using ..Ahorn, Maple
 
-@mapdef Entity "FactoryHelper/KillerDebris" KillerDebris(x::Integer, y::Integer, attachToSolid::Bool=false)
+@mapdef Entity "FactoryHelper/KillerDebris" KillerDebris(x::Integer, y::Integer, color::String="Bronze", attachToSolid::Bool=false)
 
 const placements = Ahorn.PlacementDict(
 )
@@ -14,17 +14,14 @@ Ahorn.editingOptions(entity::KillerDebris) = Dict{String, Any}(
 )
 
 for color in debrisColors
-    for attached in false:true
-        key = "Killer Debris ($(uppercasefirst(color))$(attached ? ", Attached" : "")) (FactoryHelper)"
-        placements[key] = Ahorn.EntityPlacement(
-            KillerDebris,
-            "point",
-            Dict{String, Any}(
-                "color" => color,
-                "attachToSolid" => attached,
-            )
+    key = "Killer Debris ($(uppercasefirst(color))) (FactoryHelper)"
+    placements[key] = Ahorn.EntityPlacement(
+        KillerDebris,
+        "point",
+        Dict{String, Any}(
+            "color" => color
         )
-    end
+    )
 end
 
 function Ahorn.render(ctx::Ahorn.Cairo.CairoContext, entity::KillerDebris, room::Maple.Room)

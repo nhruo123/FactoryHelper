@@ -5,20 +5,16 @@ using ..Ahorn, Maple
 @mapdef Entity "FactoryHelper/RustyLamp" RustyLamp(x::Integer, y::Integer, activationId::String="", strobePattern::String="None", initialDelay::Real=0.0, startActive::Bool=false)
 
 const placements = Ahorn.PlacementDict(
-    "Rusty Lamp (Inactive) (FactoryHelper)" => Ahorn.EntityPlacement(
-        RustyLamp,
-        "point",
-    ),
-    "Rusty Lamp (Active) (FactoryHelper)" => Ahorn.EntityPlacement(
+    "Rusty Lamp (FactoryHelper)" => Ahorn.EntityPlacement(
         RustyLamp,
         "point",
         Dict{String, Any}(
-			"startActive" => true
-		),
-    ),
+          "startActive" => true
+        ),
+    )
 )
 
-patterns = ["None", "FlickerOn", "LightFlicker", "TurnOffFlickerOn"]
+patterns = ["None", "FlickerOn", "FlickerOff", "LightFlicker", "TurnOffFlickerOn"]
 
 Ahorn.editingOptions(entity::RustyLamp) = Dict{String, Any}(
     "strobePattern" => patterns

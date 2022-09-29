@@ -8,21 +8,7 @@ using ..Ahorn, Maple
 fanUnion = Union{FanHorizontal, FanVertical}
 
 const placements = Ahorn.PlacementDict(
-    "Fan (Horizontal, Inactive) (FactoryHelper)" => Ahorn.EntityPlacement(
-        FanHorizontal,
-        "rectangle",
-        Dict{String, Any}(
-			"height" => 16,
-        )
-    ),
-    "Fan (Vertical, Inactive) (FactoryHelper)" => Ahorn.EntityPlacement(
-        FanVertical,
-        "rectangle",
-        Dict{String, Any}(
-			"width" => 16,
-        )
-    ),
-    "Fan (Horizontal, Active) (FactoryHelper)" => Ahorn.EntityPlacement(
+    "Fan (Horizontal) (FactoryHelper)" => Ahorn.EntityPlacement(
         FanHorizontal,
         "rectangle",
         Dict{String, Any}(
@@ -30,14 +16,14 @@ const placements = Ahorn.PlacementDict(
 			"height" => 16,
         )
     ),
-    "Fan (Vertical, Active) (FactoryHelper)" => Ahorn.EntityPlacement(
+    "Fan (Vertical) (FactoryHelper)" => Ahorn.EntityPlacement(
         FanVertical,
         "rectangle",
         Dict{String, Any}(
 			"startActive" => true,
 			"width" => 16,
         )
-    ),
+    )
 )
     
 bodySprite = "objects/FactoryHelper/fan/body0"

@@ -5,7 +5,7 @@ using ..Ahorn, Maple
 @mapdef Entity "FactoryHelper/RustBerry" RustBerry(x::Integer, y::Integer)
 
 const placements = Ahorn.PlacementDict(
-    "Strawberry (Rusty) (FactoryHelper)" => Ahorn.EntityPlacement(
+    "Rusty Berry (FactoryHelper)" => Ahorn.EntityPlacement(
         RustBerry,
     )
 )
