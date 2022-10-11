@@ -11,6 +11,11 @@ local function createHandler(name, horizontal)
     handler.name = name
     handler.minimumSize = {minimumWidth, minimumHeight}
     handler.canResize = {horizontal, not horizontal}
+    handler.ignoredFields = {
+        "_id", 
+        "_name", 
+        horizontal and "height" or "width"
+    }
 
     handler.placements = {
         name = "active",
