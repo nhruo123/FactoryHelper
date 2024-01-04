@@ -21,7 +21,9 @@ for _, direction in ipairs(directions) do
             direction = direction,
             activationId = "",
             strength = 100.0,
-            startActive = true
+            startActive = true,
+            particleColors  = "808080,545151,ada5a5",
+            showParticles = true
         }
     }
     table.insert(windTunnel.placements, activePlacement)
