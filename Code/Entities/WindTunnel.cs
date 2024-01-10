@@ -25,7 +25,7 @@ namespace FactoryHelper.Entities {
         private float _percent;
         private bool _speedingUp;
         private Vector2 _defaultWindSpeed;
-        private Color[] _particleColors;
+        private Color[] _colors;
 
         public WindTunnel(Vector2 position, int width, int height, float strength, string direction, string activationId, bool startActive,
             string particleColors, bool showParticles) {
@@ -75,7 +75,7 @@ namespace FactoryHelper.Entities {
 
             int particlecount = showParticles ? width * height / 300 : 0;
 
-            _particleColors = particleColors.Split(separators, StringSplitOptions.RemoveEmptyEntries)
+            _colors = particleColors.Split(separators, StringSplitOptions.RemoveEmptyEntries)
                 .Select(str => Calc.HexToColor(str.Trim()))
                 .ToArray();
 
@@ -152,7 +152,7 @@ namespace FactoryHelper.Entities {
                 particlePosition.Y = Mod(_particles[i].Position.Y, _loopHeight);
                 float percent = _particles[i].Percent;
                 float num = (!(percent < 0.7f)) ? Calc.ClampedMap(percent, 0.7f, 1f, 1f, 0f) : Calc.ClampedMap(percent, 0f, 0.3f);
-                Draw.Rect(particlePosition + Position, _scale.X, _scale.Y, _particleColors[_particles[i].Color] * num);
+                Draw.Rect(particlePosition + Position, _scale.X, _scale.Y, _colors[_particles[i].Color] * num);
             }
         }
 
@@ -197,7 +197,7 @@ namespace FactoryHelper.Entities {
             _particles[i].Spin = Calc.Random.Range(0.25f, (float)Math.PI * 6f);
             _particles[i].Duration = Calc.Random.Range(1f, 4f);
             _particles[i].Direction = Calc.AngleToVector(Calc.Random.NextFloat((float)Math.PI * 2f), 1f);
-            _particles[i].Color = Calc.Random.Next(_particleColors.Length);
+            _particles[i].Color = Calc.Random.Next(_colors.Length);
         }
 
         public struct Particle {
