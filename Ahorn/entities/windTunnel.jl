@@ -2,7 +2,7 @@ module FactoryHelperWindTunnel
 
 using ..Ahorn, Maple
 
-@mapdef Entity "FactoryHelper/WindTunnel" WindTunnel(x::Integer, y::Integer, width::Integer=16, height::Integer=16, direction::String="Up", activationId::String="", strength::Real=100.0, startActive::Bool=false)
+@mapdef Entity "FactoryHelper/WindTunnel" WindTunnel(x::Integer, y::Integer, width::Integer=16, height::Integer=16, direction::String="Up", activationId::String="", strength::Real=100.0, startActive::Bool=false, particleColors::String="808080,545151,ada5a5", showParticles::Bool=true)
 
 directions = ["Up", "Down", "Left", "Right"]
 

@@ -105,6 +105,8 @@ placements.entities.FactoryHelper/WindTunnel.tooltips.activationId=String value 
 placements.entities.FactoryHelper/WindTunnel.tooltips.startActive=If `true` the entity will initially be active.
 placements.entities.FactoryHelper/WindTunnel.tooltips.direction=The direction the wind blows inside the wind tunnel.
 placements.entities.FactoryHelper/WindTunnel.tooltips.strength=This value determines the wind strength. Experiment with these values to find the strength you desire.\nSome familiar values from the base game are:\n	* Weak horizontal: 400\n	* Strong horizontal: 800\n	* Crazy horizontal: 1200\n	* Summit updraft: 300\n	* Summit downdraft: 400
+placements.entities.FactoryHelper/WindTunnel.tooltips.showParticles=Determines whether wind particles should be displayed.
+placements.entities.FactoryHelper/WindTunnel.tooltips.particleColors=Hex colors of the particles, as a comma-separated list. Default colors are: 808080,545151,ada5a5
 
 # -- Triggers --
 # Factory Activation Trigger

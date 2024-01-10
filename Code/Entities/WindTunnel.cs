@@ -5,16 +5,13 @@ using Microsoft.Xna.Framework;
 using Monocle;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FactoryHelper.Entities {
     [CustomEntity("FactoryHelper/WindTunnel")]
     public class WindTunnel : Entity {
         private static readonly float _baseAlpha = 0.7f;
-        private static readonly Color[] _colors = new Color[3] {
-            Calc.HexToColor("808080"),
-            Calc.HexToColor("545151"),
-            Calc.HexToColor("ada5a5")
-        };
+        private static readonly char[] separators = { ',' };
 
         private readonly float _windUpTime = 0.5f;
         private readonly float _windDownTime = 0.2f;
@@ -28,8 +25,10 @@ namespace FactoryHelper.Entities {
         private float _percent;
         private bool _speedingUp;
         private Vector2 _defaultWindSpeed;
+        private Color[] _colors;
 
-        public WindTunnel(Vector2 position, int width, int height, float strength, string direction, string activationId, bool startActive) {
+        public WindTunnel(Vector2 position, int width, int height, float strength, string direction, string activationId, bool startActive,
+            string particleColors, bool showParticles) {
             Depth = -1000;
             Position = position;
             _loopWidth = width;
@@ -74,7 +73,11 @@ namespace FactoryHelper.Entities {
                     break;
             }
 
-            int particlecount = width * height / 300;
+            int particlecount = showParticles ? width * height / 300 : 0;
+
+            _colors = particleColors.Split(separators, StringSplitOptions.RemoveEmptyEntries)
+                .Select(str => Calc.HexToColor(str.Trim()))
+                .ToArray();
 
             _particles = new Particle[particlecount];
             for (int i = 0; i < _particles.Length; i++) {
@@ -83,8 +86,8 @@ namespace FactoryHelper.Entities {
         }
 
         public WindTunnel(EntityData data, Vector2 offset)
-            : this(data.Position + offset, data.Width, data.Height, data.Float("strength", 1f), data.Attr("direction", "Up"),
-                   data.Attr("activationId", ""), data.Bool("startActive", false)) {
+            : this(data.Position + offset, data.Width, data.Height, data.Float("strength", 1f), data.Attr("direction", "Up"), data.Attr("activationId", ""),
+                   data.Bool("startActive", false), data.Attr("particleColors", "808080,545151,ada5a5"), data.Bool("showParticles", true)) {
         }
 
         public enum Direction {
