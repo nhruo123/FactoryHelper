@@ -6,8 +6,21 @@ using Monocle;
 using System;
 
 namespace FactoryHelper.Entities {
+
+
     [CustomEntity("FactoryHelper/DashNegator")]
     public class DashNegator : Entity {
+        public enum ActivationCondition {
+            OnDash = 0,
+            IsDashing = 1,
+            IsNotDashing = 2,
+        }
+        public enum Direction {
+            Down = 0,
+            Left = 1,
+            Right = 2,
+        }
+
         public static readonly ParticleType P_NegatorField = new() {
             Size = 1f,
             Color = Calc.HexToColor("800000") * 0.8f,
@@ -27,11 +40,30 @@ namespace FactoryHelper.Entities {
 
         public FactoryActivator Activator;
 
+        private static int TEXTURE_HIGHT;
+        private static int TEXTURE_WIDTH;
+        private static int HITBOX_HIGHT = 4;
+
+        static DashNegator() {
+            MTexture texture = GFX.Game["danger/FactoryHelper/dashNegator/"];
+            TEXTURE_WIDTH = texture.Width;
+            TEXTURE_HIGHT = texture.Height;
+        }
+
+        private readonly Direction _direction;
         private readonly Sprite[] _turretSprites;
         private readonly Solid[] _turretSolids;
         private readonly float _particleSpanPeriod;
+        private readonly ActivationCondition _activationCondition;
 
-        public DashNegator(Vector2 position, int width, int height, string activationId, bool startActive) 
+        public DashNegator(Vector2 position,
+                           int width,
+                           int height,
+                           string activationId,
+                           bool startActive,
+                           ActivationCondition activationCondition,
+                           Direction direction,
+                           bool enableCollision)
             : base(position) {
             Add(Activator = new FactoryActivator());
             Activator.ActivationId = activationId == string.Empty ? null : activationId;
@@ -41,11 +73,22 @@ namespace FactoryHelper.Entities {
             Activator.OnTurnOff = OnTurnOff;
             Activator.OnTurnOn = OnTurnOn;
 
+            this._direction = direction;
+
             Add(new SteamCollider(OnSteamWall));
 
-            Collider = new Hitbox(width - 4, height, 2, 0);
+            this._activationCondition = activationCondition;
 
-            width = 16 * (width / 16);
+            int turretCount;
+            if (direction == Direction.Down) {
+                width = TEXTURE_WIDTH * (width / TEXTURE_WIDTH);
+                Collider = new Hitbox(width - 4, height, 2, 0);
+                turretCount = width / TEXTURE_WIDTH;
+            } else {
+                height = TEXTURE_HIGHT * (height / TEXTURE_HIGHT);
+                Collider = new Hitbox(width, height - 4, 0, 2);
+                turretCount = height / TEXTURE_HIGHT;
+            }
 
             Depth = -8999;
 
@@ -56,25 +99,53 @@ namespace FactoryHelper.Entities {
             });
             Add(new PlayerCollider(OnPlayer));
 
-            int length = width / 16;
-            _turretSprites = new Sprite[length];
-            _turretSolids = new Solid[length];
+            this._turretSprites = new Sprite[turretCount];
+            this._turretSolids = new Solid[turretCount];
+            this.AddTurrets(position, width, turretCount, direction);
 
-            for (int i = 0; i < length; i++) {
-                Add(_turretSprites[i] = new Sprite(GFX.Game, "danger/FactoryHelper/dashNegator/"));
-                _turretSprites[i].Add("inactive", "turret", 1f, 0);
-                _turretSprites[i].Add("rest", "turret", 0.2f, "active", 0);
-                _turretSprites[i].Add("active", "turret", 0.05f, "rest");
-                _turretSprites[i].Position = new Vector2(-2 + (16 * i), -2);
 
-                _turretSolids[i] = new Solid(position + new Vector2(16 * i, 0), 16, 4, false);
+            foreach (var solid in this._turretSolids) {
+                solid.Collidable = enableCollision;
             }
 
             _particleSpanPeriod = 256f / (width * height);
         }
 
+
         public DashNegator(EntityData data, Vector2 offset)
-            : this(data.Position + offset, data.Width, data.Height, data.Attr("activationId"), data.Bool("startActive")) {
+            : this(data.Position + offset,
+                   data.Width,
+                   data.Height,
+                   data.Attr("activationId"),
+                   data.Bool("startActive"),
+                   data.Enum<ActivationCondition>("activationCondition", ActivationCondition.OnDash),
+                   data.Enum<Direction>("direction", Direction.Down),
+                   data.Bool("enableCollision", true)) {
+        }
+
+        private void AddTurrets(Vector2 position, int width, int turretCount, Direction direction) {
+
+            for (int i = 0; i < turretCount; i++) {
+                Sprite turretSprite = new Sprite(GFX.Game, "danger/FactoryHelper/dashNegator/");
+                Add(_turretSprites[i] = turretSprite);
+                turretSprite.Add("inactive", "turret", 1f, 0);
+                turretSprite.Add("rest", "turret", 0.2f, "active", 0);
+                turretSprite.Add("active", "turret", 0.05f, "rest");
+                turretSprite.CenterOrigin();
+                if (direction == Direction.Down) {
+                    turretSprite.Rotation = 0.0f;
+                    turretSprite.Position = new Vector2((TEXTURE_WIDTH * i) + turretSprite.Width / 2, (turretSprite.Height / 2) - 2);
+                    _turretSolids[i] = new Solid(position + new Vector2(TEXTURE_WIDTH * i, 0), TEXTURE_WIDTH, 4, false);
+                } else if (direction == Direction.Right) {
+                    turretSprite.Rotation = -1.57079637f;
+                    turretSprite.Position = new Vector2(turretSprite.Width / 2 - 2, (TEXTURE_HIGHT * i) + (turretSprite.Height / 2) - 2);
+                    _turretSolids[i] = new Solid(position + new Vector2(-4, TEXTURE_HIGHT * i), 4, TEXTURE_HIGHT, false);
+                } else if (direction == Direction.Left) {
+                    turretSprite.Rotation = 1.57079637f;
+                    turretSprite.Position = new Vector2(width - turretSprite.Width / 2 + 2, (TEXTURE_HIGHT * i) + (turretSprite.Height / 2) - 2);
+                    _turretSolids[i] = new Solid(position + new Vector2(width, 0) + new Vector2(0, TEXTURE_HIGHT * i), 4, TEXTURE_HIGHT, false);
+                }
+            }
         }
 
         private void OnSteamWall(SteamWall obj) {
@@ -108,14 +179,23 @@ namespace FactoryHelper.Entities {
 
         public override void Render() {
             Color color = Color.DarkRed * 0.3f;
+            foreach (var item in _turretSprites) {
+                Draw.Circle(this.Position + item.Position, 3, Color.Red, 3);
+            }
             if (Visible && Activator.IsOn) {
                 Draw.Rect(Collider, color);
 
                 Player player = Scene.Tracker.GetEntity<Player>();
-                if (player != null && !(player.Top - 4f > Bottom || player.Bottom < Top)) {
-                    float left = Math.Min(Math.Max(Left, player.Left - 2f), Right);
-                    float right = Math.Max(Math.Min(Right, player.Right + 2f), left);
-                    Draw.Rect(left, Top, right - left, Height, Color.Red * 0.3f);
+                if (player != null) {
+                    if (this._direction == Direction.Down && !(player.Top - 4f > Bottom || player.Bottom < Top)) {
+                        float left = Math.Min(Math.Max(Left, player.Left - 2f), Right);
+                        float right = Math.Max(Math.Min(Right, player.Right + 2f), left);
+                        Draw.Rect(left, Top, right - left, Height, Color.Red * 0.3f);
+                    } else if ((this._direction == Direction.Left || this._direction == Direction.Right) && !(player.Right < Left || player.Left > Right)) {
+                        float top = Math.Min(Math.Max(Top, player.Top), Bottom);
+                        float bottom = Math.Max(Math.Min(Bottom, player.Bottom), Top);
+                        Draw.Rect(Left, top, Width, bottom - top, Color.Red * 0.3f);
+                    }
                 }
             }
 
@@ -151,15 +231,36 @@ namespace FactoryHelper.Entities {
         }
 
         private void Fizzle() {
-            for (int i = 0; i < Width; i += 16) {
-                for (int j = 0; j < Height; j += 16) {
+            for (int i = 0; i < Width; i += TEXTURE_WIDTH) {
+                for (int j = 0; j < Height; j += TEXTURE_WIDTH) {
                     SceneAs<Level>().ParticlesFG.Emit(P_NegatorField, 1, Position + new Vector2(4 + i, 4 + j), new Vector2(4, 4));
                 }
             }
         }
 
         private void OnPlayer(Player player) {
-            if (Activator.IsOn && player.StartedDashing) {
+            if (!Activator.IsOn) {
+                return;
+            }
+
+            bool shouldActivate = false;
+
+            switch (this._activationCondition) {
+                case ActivationCondition.OnDash: {
+                        shouldActivate = player.StartedDashing;
+                        break;
+                    }
+                case ActivationCondition.IsDashing: {
+                        shouldActivate = player.DashAttacking;
+                        break;
+                    }
+                case ActivationCondition.IsNotDashing: {
+                        shouldActivate = !player.DashAttacking;
+                        break;
+                    }
+            }
+
+            if (shouldActivate) {
                 ShootClosestLaserToPlayer(player);
                 player.Die(Vector2.UnitY);
             }
@@ -167,9 +268,23 @@ namespace FactoryHelper.Entities {
 
         private void ShootClosestLaserToPlayer(Player player) {
             Audio.Play("event:/char/badeline/boss_laser_fire", player.Position);
-            Vector2 beamPosition = new(Position.X, Position.Y + 8);
-            beamPosition.X += Math.Min((int)(player.Center.X - Left) / 16 * 16, Width - 12) + 8;
-            Scene.Add(new DashNegatorBeam(beamPosition));
+            Vector2 beamPosition = new(Position.X, Position.Y);
+            Vector2 targetVector = Vector2.Zero;
+
+            if (this._direction == Direction.Down) {
+                beamPosition.X += Math.Min((int)(player.Center.X - Left) / TEXTURE_WIDTH * TEXTURE_WIDTH, Width - 12) + TEXTURE_WIDTH / 2;
+                beamPosition.Y += TEXTURE_HIGHT / 2;
+                targetVector = Vector2.UnitY;
+            } else if (this._direction == Direction.Right) {
+                beamPosition.X += TEXTURE_HIGHT / 2;
+                beamPosition.Y -= Math.Min(Width - 12, (int)(Top - player.Center.Y) / TEXTURE_WIDTH * TEXTURE_WIDTH) - TEXTURE_WIDTH / 2;
+                targetVector = Vector2.UnitX;
+            } else if (this._direction == Direction.Left) {
+                beamPosition.X += Width - TEXTURE_HIGHT / 2;
+                beamPosition.Y -= Math.Min(Width - 12, (int)(Top - player.Center.Y) / TEXTURE_WIDTH * TEXTURE_WIDTH) - TEXTURE_WIDTH / 2;
+                targetVector = -Vector2.UnitX;
+            }
+            Scene.Add(new DashNegatorBeam(beamPosition, targetVector));
         }
 
         private void OnShake(Vector2 pos) {

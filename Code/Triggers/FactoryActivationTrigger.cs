@@ -13,7 +13,7 @@ namespace FactoryHelper.Triggers {
         private readonly HashSet<string> _activationIds = new();
         private bool _hasFired;
 
-        public FactoryActivationTrigger(EntityData data, Vector2 offset) 
+        public FactoryActivationTrigger(EntityData data, Vector2 offset)
             : base(data, offset) {
             string[] activationIds = data.Attr("activationIds", "").Split(',');
 

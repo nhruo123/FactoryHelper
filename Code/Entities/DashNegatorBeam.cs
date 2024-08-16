@@ -8,12 +8,13 @@ namespace FactoryHelper.Entities {
         private readonly Sprite _beamSprite;
         private readonly Sprite _beamStartSprite;
         private readonly VertexPositionColor[] fade = new VertexPositionColor[24];
-        private readonly float _angle = Calc.Angle(Vector2.UnitY);
+        private readonly float _angle;
         private Vector2 _beamOrigin;
         private float _beamAlpha = 0f;
         private float _sideFadeAlpha = 1f;
 
-        public DashNegatorBeam(Vector2 origin) {
+        public DashNegatorBeam(Vector2 origin, Vector2 targetVector) {
+            _angle = Calc.Angle(targetVector);
             Add(_beamSprite = GFX.SpriteBank.Create("badeline_beam"));
             Add(_beamStartSprite = GFX.SpriteBank.Create("badeline_beam_start"));
             _beamOrigin = origin;
