@@ -4,6 +4,10 @@ using FactoryHelper.Components;
 using Microsoft.Xna.Framework;
 using Monocle;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Linq;
 
 namespace FactoryHelper.Entities {
 
@@ -42,7 +46,6 @@ namespace FactoryHelper.Entities {
 
         private static int TEXTURE_HIGHT;
         private static int TEXTURE_WIDTH;
-        private static int HITBOX_HIGHT = 4;
 
         static DashNegator() {
             MTexture texture = GFX.Game["danger/FactoryHelper/dashNegator/"];
@@ -54,7 +57,10 @@ namespace FactoryHelper.Entities {
         private readonly Sprite[] _turretSprites;
         private readonly Solid[] _turretSolids;
         private readonly float _particleSpanPeriod;
-        private readonly ActivationCondition _activationCondition;
+        private ActivationCondition _activationCondition;
+
+        private readonly SortedDictionary<string, (bool, ActivationCondition)> _activationConditionControls = new SortedDictionary<string, (bool, ActivationCondition)>();
+        private readonly List<String> _activationConditionControlsOrder = new List<string>();
 
         public DashNegator(Vector2 position,
                            int width,
@@ -63,7 +69,8 @@ namespace FactoryHelper.Entities {
                            bool startActive,
                            ActivationCondition activationCondition,
                            Direction direction,
-                           bool enableCollision)
+                           bool enableCollision,
+                           string activationConditionControlls)
             : base(position) {
             Add(Activator = new FactoryActivator());
             Activator.ActivationId = activationId == string.Empty ? null : activationId;
@@ -109,6 +116,37 @@ namespace FactoryHelper.Entities {
             }
 
             _particleSpanPeriod = 256f / (width * height);
+
+            if (!string.IsNullOrEmpty(activationConditionControlls)) {
+                foreach (string activationControlString in activationConditionControlls.Split(',')) {
+                    string[] activationControlParts = activationControlString.Split(':');
+
+                    if (activationControlParts.Length != 3) {
+                        continue;
+                    }
+
+                    if (!Enum.TryParse(activationControlParts[2].Trim().ToLower(), true, out ActivationCondition mode)) {
+                        continue;
+                    }
+
+                    string stateString = activationControlParts[1].Trim().ToLower();
+                    bool state;
+
+                    if (stateString == "true" || stateString == "on") {
+                        state = true;
+                    } else if (stateString == "false" || stateString == "off") {
+                        state = false;
+                    } else {
+                        continue;
+                    }
+
+                    string flag = activationControlParts[0].Trim();
+
+                    _activationConditionControls[flag] = (state, mode);
+                    _activationConditionControlsOrder.Add(flag);
+                }
+                _activationConditionControlsOrder.Reverse();
+            }
         }
 
 
@@ -120,7 +158,8 @@ namespace FactoryHelper.Entities {
                    data.Bool("startActive"),
                    data.Enum<ActivationCondition>("activationCondition", ActivationCondition.OnDash),
                    data.Enum<Direction>("direction", Direction.Down),
-                   data.Bool("enableCollision", true)) {
+                   data.Bool("enableCollision", true),
+                   data.Attr("activationConditionControlls")) {
         }
 
         private void AddTurrets(Vector2 position, int width, int turretCount, Direction direction) {
@@ -174,6 +213,17 @@ namespace FactoryHelper.Entities {
 
             if (Visible && Activator.IsOn && Scene.OnInterval(_particleSpanPeriod)) {
                 SceneAs<Level>().ParticlesFG.Emit(P_NegatorField, 1, Position + Collider.Center, new Vector2(Width / 2, Height / 2));
+            }
+
+            foreach (string key in _activationConditionControlsOrder) {
+                bool currentFlagState = (Scene as Level).Session.GetFlag(key);
+                (bool, ActivationCondition) value = _activationConditionControls[key];
+
+                bool expectedFlagState = value.Item1;
+                if (currentFlagState == expectedFlagState) {
+                    ActivationCondition newActivationCondition = value.Item2;
+                    _activationCondition = newActivationCondition;
+                }
             }
         }
 

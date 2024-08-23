@@ -8,11 +8,11 @@ local directionEnum = { Down = 0, Left = 1, Right = 2 }
 local directionRotationLookup = { directionEnum.Down, directionEnum.Right, directionEnum.Left }
 
 dashNegator.name = "FactoryHelper/DashNegator"
-dashNegator.minimumSize = function (_, entity)
-    if entity.direction == directionEnum.Down then
-        return {16, 32}
+dashNegator.minimumSize = function(_, entity)
+    if entity.direction == directionEnum.Down or entity.direction == nil then
+        return { 16, 32 }
     else
-        return {32, 16}
+        return { 32, 16 }
     end
 end
 
@@ -23,9 +23,10 @@ dashNegator.placements = {
         width = 16,
         height = 32,
         activationId = "",
+        activationConditionControlls = "",
         startActive = true,
-        activationCondition= 0,
-        direction = 1,
+        activationCondition = activationConditionEnum.OnDash,
+        direction = directionEnum.Down,
         enableCollision = true
     }
 }
@@ -34,17 +35,17 @@ dashNegator.fieldInformation = {
     activationCondition = {
         options = activationConditionEnum,
         editable = false,
-        default = 0,
+        default = activationConditionEnum.OnDash,
     },
     direction = {
         options = directionEnum,
         editable = false,
-        default = 0,
+        default = directionEnum.Down,
     }
 }
 
-local areaColor = {0.7, 0.1, 0.1, 0.2}
-local areaBorder = {0.7, 0.1, 0.1, 0.5}
+local areaColor = { 0.7, 0.1, 0.1, 0.2 }
+local areaBorder = { 0.7, 0.1, 0.1, 0.5 }
 
 local activeTurretTexture = "danger/FactoryHelper/dashNegator/turret05"
 local inactiveTurretTexture = "danger/FactoryHelper/dashNegator/turret00"
@@ -61,7 +62,7 @@ function dashNegator.sprite(room, entity)
 
     local torrent_count
     local rect
-    if entity.direction == directionEnum.Down then
+    if entity.direction == directionEnum.Down or entity.direction == nil then
         torrent_count = math.floor(width / 16)
         rect = drawableRectangle.fromRectangle("bordered", x, y, torrent_count * 16, height, areaColor, areaBorder)
     else
@@ -75,7 +76,7 @@ function dashNegator.sprite(room, entity)
     for i = 0, torrent_count - 1, 1 do
         local turret = drawableSprite.fromTexture(texture, entity)
         turret:setJustification(0.0, 0.0)
-        if entity.direction == directionEnum.Down then
+        if entity.direction == directionEnum.Down or entity.direction == nil then
             turret:addPosition(i * 16, 0)
         elseif entity.direction == directionEnum.Right then
             turret:addPosition(0, (i + 1) * 16)

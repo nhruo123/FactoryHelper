@@ -50,6 +50,7 @@ entities.FactoryHelper/DashFuseBox.attributes.description.persistent=Determines 
 entities.FactoryHelper/DashNegator.placements.name.active=Dash Negator
 entities.FactoryHelper/DashNegator.attributes.description.activationId=String value of the entity's activator ID. When a factory activator with this ID is turned on, the entity will toggle state.
 entities.FactoryHelper/DashNegator.attributes.description.startActive=If `true` the entity will initially be active.
+entities.FactoryHelper/DashNegator.attributes.description.activationConditionControlls=A comma separated list that controlls the activation condition with a flag, inputs expected to be a tuple of FLAG STATE and ACTIVATION MODE, <FLAG_NAME>:<FLAG_SATE>:<ACTIVATION_CONDITION>
 
 # Killer Debris
 entities.FactoryHelper/KillerDebris.placements.name.bronze=Killer Debris (Bronze)
@@ -164,6 +165,9 @@ entities.FactoryHelper/WindTunnel.attributes.description.direction=The direction
 entities.FactoryHelper/WindTunnel.attributes.description.strength=This value determines the wind strength. Experiment with these values to find the strength you desire.\nSome familiar values from the base game are:\n	* Weak horizontal: 400\n	* Strong horizontal: 800\n	* Crazy horizontal: 1200\n	* Summit updraft: 300\n	* Summit downdraft: 400
 entities.FactoryHelper/WindTunnel.attributes.description.showParticles=Determines whether particles should be displayed.
 entities.FactoryHelper/WindTunnel.attributes.description.particleColors=Hex colors of the particles, as a comma-separated list. Default colors are: 808080,545151,ada5a5
+
+# Rusty Spikes
+entities.FactoryHelper/FactoryActivatorController.placements.name.default=Factory Activator Controller
 
 # -- Triggers --
 # Factory Activation Trigger
